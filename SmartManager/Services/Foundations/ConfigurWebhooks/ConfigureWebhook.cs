@@ -34,22 +34,25 @@ namespace SmartManager.Services.Foundations.ConfigurWebhook
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using var scope = this.serviceProvider.CreateScope();
+            try
+            {
+                using var scope = this.serviceProvider.CreateScope();
 
-            var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
+                var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-            var webhookAddress = $"https://smartmanager-b210ccd2cf61.herokuapp.com/bot/{botConfiguration.Token}";
+                var webhookAddress = $"https://smartmanager-b210ccd2cf61.herokuapp.com/bot/{botConfiguration.Token}";
 
-            this.logger.LogInformation("Setting webhook");
+                this.logger.LogInformation("Setting webhook");
 
-            await botClient.SendTextMessageAsync(
-                chatId: 1924521160,
-                text: "Webhook starting work..");
+                await botClient.SendTextMessageAsync(
+                    chatId: 1924521160,
+                    text: "Webhook starting work..");
 
-            await botClient.SetWebhookAsync(
-                    url: webhookAddress,
-                    allowedUpdates: Array.Empty<UpdateType>(),
-                    cancellationToken: cancellationToken);
+                await botClient.SetWebhookAsync(
+                        url: webhookAddress,
+                        allowedUpdates: Array.Empty<UpdateType>(),
+                        cancellationToken: cancellationToken);
+            }catch(Exception ex) { throw ex; }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
