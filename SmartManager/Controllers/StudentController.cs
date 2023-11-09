@@ -2,6 +2,7 @@
 using SmartManager.Models.Students;
 using SmartManager.Services.Processings.GroupsStatistics;
 using SmartManager.Services.Processings.PaymentStatistics;
+using SmartManager.Services.Processings.Spreadsheets;
 using SmartManager.Services.Processings.Statistics;
 using SmartManager.Services.Processings.Students;
 using SmartManager.Services.Processings.StudentsStatistics;
@@ -18,19 +19,47 @@ namespace SmartManager.Controllers
         private readonly IStudentsStatisticProccessingService groupStatisticProccessingService;
         private readonly IGroupsStatisticProccessingService groupsStatisticProccessingService;
         private readonly IStatisticProcessingService statisticProcessingService;
+        private readonly ISpreadsheetsProcessingService spreadsheetsProcessingService;
 
         public StudentController(
             IStudentProcessingService studentProcessingService,
             IPaymentStatisticsProccessingService paymentStatisticsProccessingService,
             IStudentsStatisticProccessingService groupStatisticProccessingService,
             IGroupsStatisticProccessingService groupsStatisticProccessingService,
-            IStatisticProcessingService statisticProcessingService)
+            IStatisticProcessingService statisticProcessingService,
+            ISpreadsheetsProcessingService spreadsheetsProcessingService)
         {
             this.studentProcessingService = studentProcessingService;
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
             this.groupStatisticProccessingService = groupStatisticProccessingService;
             this.groupsStatisticProccessingService = groupsStatisticProccessingService;
             this.statisticProcessingService = statisticProcessingService;
+            this.spreadsheetsProcessingService = spreadsheetsProcessingService;
+        }
+
+        public IActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ImportFile(IFormFile formFile)
+        {
+            IFormFile importFile = Request.Form.Files[0];
+            List<Student> students = new List<Student>();
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                importFile.CopyTo(stream);
+                stream.Position = 0;
+                students = await this.spreadsheetsProcessingService
+                    .ProcessImportRequest(stream);
+            }
+
+            await this.groupStatisticProccessingService
+                .CheckStatisticOfList(students);
+
+            return RedirectToAction(nameof(GetStudents));
         }
 
         public IActionResult PostStudent()
