@@ -1,0 +1,42 @@
+﻿@using SmartManager.Models.Students;
+@model Student;
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-dark">Edit Student</h2>
+            <hr />
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="GroupId" type="hidden" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="GivenName"></label>
+            <input asp-for="GivenName" class="form-control" required />
+            <span asp-validation-for="GivenName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Surname"></label>
+            <input asp-for="Surname" class="form-control" required />
+            <span asp-validation-for="Surname" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PhoneNumber"></label>
+            <input asp-for="PhoneNumber" class="form-control" required />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Gender"></label>
+            <input asp-for="Gender" class="form-control" />
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="GroupName"></label>
+            <input asp-for="GroupName" class="form-control" required />
+            <span asp-validation-for="GroupName" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 150px">Edit</button>
+        <a asp-controller="Student" asp-action="GetStudents" class="btn btn-secondary" style="width: 150px">
+            Back to List
+        </a>
+    </div>
+</form>

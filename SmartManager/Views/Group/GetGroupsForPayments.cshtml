@@ -1,0 +1,112 @@
+﻿@using SmartManager.Models.Groups;
+@model IQueryable<Group>
+
+@{
+    ViewData["Title"] = "ShowGroupsForpayments";
+}
+
+<style>
+    .table th {
+        white-space: nowrap;
+    }
+
+        .table th:nth-child(1),
+        .table td:nth-child(1) {
+            width: 1%;
+        }
+
+        .table th:nth-child(2),
+        .table td:nth-child(2) {
+            width: 40%;
+        }
+
+        .table th:nth-child(3),
+        .table td:nth-child(3) {
+            width: 1%;
+        }
+
+    .button-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: -10px;
+    }
+
+        .action-buttons .btn {
+            margin-left: 14px;
+            font-size: 14px;
+            padding: 0.25rem 0.5rem;
+        }
+
+            .action-buttons .btn i {
+                margin-right: 5px;
+            }
+</style>
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-dark">Payments</h2>
+        </div>
+    </div>
+    <br />
+
+    <div class="row pt-3">
+        <div class="col-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search">
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-12">
+            <p>Total Groups: @Model.Count()</p>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Group Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1;
+                foreach (var item in Model)
+                {
+                    <tr class="searchable-row">
+                        <th scope="row">@i</th>
+                        <td>@item.GroupName</td>
+                        <td>
+                            <div class="button-container">
+                                <div class="action-buttons">
+                                    <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetStudentsWithPayments" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-opencollective" alt="Open Collective Icon"></i> Students
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#searchInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".searchable-row").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>

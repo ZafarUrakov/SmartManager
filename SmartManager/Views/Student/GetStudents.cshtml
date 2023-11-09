@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    @using SmartManager.Models.Students;
+    @model IQueryable<Student>
+
+    @{
+        ViewData["Title"] = "ShowStudents";
+    }
+    <style>
+        .btn-md-custom {
+            padding: 0.3rem 0.75rem;
+            font-size: 1rem;
+        }
+    </style>
+
+    <div class="container p-3">
+        <div class="row pt-4">
+            <div class="col-6">
+                <h2 class="text-dark">Student List</h2>
+            </div>
+            <div class="col-6 text-end">
+                <a asp-controller="Student" asp-action="PostStudent" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> &nbsp; Add New Student
+                </a>
+            </div>
+            <div class="col-6 text-end">
+                <a asp-controller="Spreadsheet" asp-action="Import" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> &nbsp; Import
+                </a>
+            </div>
+        </div>
+        <br />
+
+        <div class="row pt-3">
+            <div class="col-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search">
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-12">
+                <p>Total Students: @Model.Count()</p>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">GivenName</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">PhoneNumber</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr class="searchable-row">
+                            <th scope="row">@i</th>
+                            <td>@item.GivenName</td>
+                            <td>@item.Surname</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>
+                                <a asp-route-studentId="@item.Id" asp-action="PutStudent" class="btn btn-primary btn-md-custom">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-route-studentId="@item.Id" asp-action="DeleteStudent" class="btn btn-danger btn-md-custom" onclick="return DeleteInput()">
+                                    <i class="bi bi-x-lg"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".searchable-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

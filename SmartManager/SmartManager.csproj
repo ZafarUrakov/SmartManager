@@ -7,6 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Views\Attendance\PostAttendance.cshtml" />
+    <None Include="Views\Group\GetGroups.cshtml" />
+    <None Include="Views\Group\GetGroupsForPayments.cshtml" />
+    <None Include="Views\Group\PostGroup.cshtml" />
+    <None Include="Views\Home\GetStatistics.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="Views\Payments\GetPayment.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\Spreadsheet\Import.cshtml" />
+    <None Include="Views\Statistic\GetStudentGroupData.cshtml" />
+    <None Include="Views\Student\GetStudents.cshtml" />
+    <None Include="Views\Student\GetStudentsWithGroup.cshtml" />
+    <None Include="Views\Student\GetStudentsWithPayments.cshtml" />
+    <None Include="Views\Student\PostStudent.cshtml" />
+    <None Include="Views\Student\PutStudent.cshtml" />
+    <None Include="Views\_ViewImports.cshtml" />
+    <None Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Bytescout.Spreadsheet" Version="4.7.1.2054" />
     <PackageReference Include="EFxceptions" Version="0.4.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
