@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmartManager.Models.Students;
 using SmartManager.Services.Processings.Spreadsheets;
 using SmartManager.Services.Processings.StudentsStatistics;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace SmartManager.Controllers
 {
@@ -47,4 +43,5 @@ namespace SmartManager.Controllers
             return RedirectToAction("GetStudents", "Student");
         }
     }
+}
 }
