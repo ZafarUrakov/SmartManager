@@ -1,0 +1,45 @@
+﻿@using SmartManager.Models.Statistics
+@model IQueryable<Statistic>
+
+@{
+    ViewData["Title"] = "GetStatistics";
+}
+
+<div class="container p-3">
+    <br />
+
+    <div class="row">
+        <div class="col-12">
+            <p>Total Statistics: @Model.Count()</p>
+        </div>
+    </div>
+
+    <div class="list-statistic">
+        @{
+            int i = 1;
+            foreach (var item in Model)
+            {
+                <a href="#" class="list-group-item list-statistic-item-action">1. Total: @item.TotalStudentsCount</a>
+                <a href="#" class="list-group-item list-statistic-item-action">2. Male: @item.MaleStudentsCount</a>
+                <a href="#" class="list-group-item list-statistic-item-action">3. Female: @item.FemaleStudentsCount</a>
+                <a href="#" class="list-group-item list-statistic-item-action">4. Other: @item.OtherStudentsCount</a>
+                <a href="#" class="list-group-item list-statistic-item-action">5. Unknown: @item.UnknownStudentsCount</a>
+                <a href="#" class="list-group-item list-statistic-item-action">6. IsPaid: @item.PaidStudentsCount</a>
+                <a href="#" class="list-group-item list-statistic-item-action">7. Cash: @item.TotalPayment</a>
+                i++;
+            }
+        }
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#searchInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".list-statistic-item").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>

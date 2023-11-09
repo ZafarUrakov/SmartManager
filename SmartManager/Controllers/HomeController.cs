@@ -1,17 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SmartManager.Models;
+using SmartManager.Models.Statistics;
+using SmartManager.Services.Processings.Statistics;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmartManager.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IStatisticProcessingService statisticProcessingService;
+        public HomeController(IStatisticProcessingService statisticProcessingService)
         {
-            _logger = logger;
+            this.statisticProcessingService = statisticProcessingService;
         }
+
+        public async ValueTask<IActionResult> GetStatistics()
+        {
+            await this.statisticProcessingService.AddOrUpdateStatisticAsync();
+
+            IQueryable<Statistic> statistics = this.statisticProcessingService.RetrieveAllStatistics();
+
+            return View(statistics);
+        }
+
+        private readonly ILogger<HomeController> _logger;
 
         public IActionResult Index()
         {

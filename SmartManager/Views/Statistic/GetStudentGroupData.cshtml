@@ -1,0 +1,33 @@
+﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var data = [{ "name": "\u0413\u0440\u0443\u043F\u043F\u0430 \u0410", "percentage": 30 }, { "name": "\u0413\u0440\u0443\u043F\u043F\u0430 \u0411", "percentage": 20 }, { "name": "\u0413\u0440\u0443\u043F\u043F\u0430 \u0421", "percentage": 50 }];
+
+        var chartData = data.map(function (group) {
+            return { label: group.name, data: group.percentage };
+        });
+
+        var labels = chartData.map(function (item) { return item.label; });
+        var percentages = chartData.map(function (item) { return item.data; });
+
+        var ctx = document.getElementById('studentGroupChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: percentages,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                    ]
+                }]
+            },
+            options: {
+                cutout: '70%',
+                responsive: false
+            }
+        });
+    });
+</script>

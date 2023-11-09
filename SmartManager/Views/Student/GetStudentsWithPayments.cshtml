@@ -1,0 +1,123 @@
+﻿@using SmartManager.Models.Students;
+@model IQueryable<Student>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+
+    @{
+        ViewData["Title"] = "GetStudentWithPayment";
+    }
+    <style>
+        .btn-md-custom {
+            padding: 0.3rem 0.75rem;
+            font-size: 1rem;
+        }
+    </style>
+
+    <div class="container p-3">
+        <div class="row pt-4">
+            <div class="col-6">
+                <h2 class="text-dark">Student </h2>
+            </div>
+            <div class="col-6 text-end">
+                <a asp-controller="Student" asp-action="" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> &nbsp; Add New Student
+                </a>
+            </div>
+        </div>
+        <br />
+
+        <div class="row pt-3">
+            <div class="col-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search">
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-12">
+                <p>Total Students: @Model.Count()</p>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">GivenName</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">PhoneNumber</th>
+                    <th scope="col">GroupName</th>
+                    <th scope="col">Payments</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr class="searchable-row">
+                            <th scope="row">@i</th>
+                            <td>@item.GivenName</td>
+                            <td>@item.Surname</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.GroupName</td>
+                            <td>
+                                <button class="btn btn-success toggle-attendance" data-student-id="@item.Id" data-is-present="true">
+                                    <i class="bi bi-check-circle"></i> Paid
+                                </button>
+                                <button class="btn btn-danger toggle-attendance" data-student-id="@item.Id" data-is-paid="false">
+                                    <i class="bi bi-x-circle"></i> NotPaid
+                                </button>
+                            </td>
+
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".searchable-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".toggle-attendance").click(function () {
+                var button = $(this);
+                var studentId = button.data("student-id");
+                var isPayed = button.data("is-payed");
+
+                $.post("/Payment/UpdatePayment", { studentId: studentId, isPayed: isPayed }, function (data) {
+                    if (data.success) {
+                        if (isPayed) {
+                            button.removeClass("btn-success").addClass("btn-secondary");
+                        } else {
+                            button.removeClass("btn-danger").addClass("btn-secondary");
+                        }
+                    } else {
+                        alert("Произошла ошибка при обновлении посещаемости.");
+                    }
+                });
+            });
+
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".searchable-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

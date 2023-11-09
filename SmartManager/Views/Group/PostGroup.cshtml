@@ -1,0 +1,25 @@
+﻿@using SmartManager.Models.Groups;
+@model Group
+
+@{
+    ViewData["Title"] = "PostGroup";
+}
+
+<form method="post" asp-action="PostGroup">
+    <input asp-for="Id" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-dark">Add Group</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="GroupName"></label>
+            <input asp-for="GroupName" class="form-control" required />
+            <span asp-validation-for="GroupName" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:150px">Add</button>
+        <a asp-controller="Group" asp-action="GetGroups" class="btn btn-secondary" style="width:150px">
+            Back to List
+        </a>
+    </div>
+</form>

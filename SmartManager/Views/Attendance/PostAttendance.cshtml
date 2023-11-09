@@ -1,0 +1,26 @@
+﻿@using SmartManager.Models.Attendances;
+@model Attendance
+
+<form method="post">
+    @Html.HiddenFor(model => model.Student.Id)
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-dark">Attendance</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Date"></label>
+            <input asp-for="Date" class="form-control" type="date" required />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="IsPresent"></label>
+            <input asp-for="IsPresent" class="form-check-input" type="checkbox" />
+            <span asp-validation-for="IsPresent" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 150px">Add</button>
+        <a asp-controller="Student" asp-action="GetStudents" class="btn btn-secondary" style="width: 150px">
+            Back to List
+        </a>
+    </div>
+</form>

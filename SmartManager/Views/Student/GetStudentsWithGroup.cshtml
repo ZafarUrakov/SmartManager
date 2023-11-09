@@ -1,0 +1,107 @@
+﻿@using SmartManager.Models.Students;
+@model IQueryable<Student>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <br />
+    <a href="javascript:history.back()" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+
+
+    @{
+        ViewData["Title"] = "ShowstudentsWithGroup";
+    }
+    <style>
+        .btn-md-custom {
+            padding: 0.3rem 0.75rem;
+            font-size: 1rem;
+        }
+    </style>
+    <div class="container p-3">
+        <div class="row pt-4">
+            <div class="col-6">
+                <h2 class="text-dark">Student List</h2>
+            </div>
+        </div>
+        <br />
+
+        <div class="row pt-3">
+            <div class="col-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search">
+            </div>
+        </div>
+        <br />
+
+        <div class "row">
+            <div class="col-12">
+                <p>Total students: @Model.Count()</p>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">FirstName</th>
+                    <th scope="col">LastName</th>
+                    <th scope="col">PhoneNumber</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr class="searchable-row">
+                            <th scope="row">@i</th>
+                            <td>@item.GivenName</td>
+                            <td>@item.Surname</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>
+                                <a asp-route-studentId="@item.Id" asp-action="PutstudentInGroupAsync" class="btn btn-primary btn-md-custom">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-route-studentId="@item.Id" asp-action="DeleteStudentInGroup" class="btn btn-danger btn-md-custom" onclick="return DeleteInput()">
+                                    <i class="bi bi-x-lg"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function DeleteInput() {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Student is Deleted',
+                showConfirmButton: false,
+                timer: 1000
+            })
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".searchable-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
