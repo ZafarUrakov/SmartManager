@@ -44,4 +44,3 @@ namespace SmartManager.Controllers
         }
     }
 }
-}
