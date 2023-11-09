@@ -2,10 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SmartManager.Models;
 using SmartManager.Models.Statistics;
-using SmartManager.Models.Students;
-using SmartManager.Services.Processings.Spreadsheets;
 using SmartManager.Services.Processings.Statistics;
-using SmartManager.Services.Processings.StudentsStatistics;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,35 +11,19 @@ namespace SmartManager.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ISpreadsheetsProcessingService spreadsheetProcessingService;
-        private readonly IStudentsStatisticProccessingService groupStatisticProccessingService;
-
-        public HomeController(
-            ISpreadsheetsProcessingService spreadsheetProcessingService,
-            IStudentsStatisticProccessingService groupStatisticProccessingService)
+        private readonly IStatisticProcessingService statisticProcessingService;
+        public HomeController(IStatisticProcessingService statisticProcessingService)
         {
-            this.spreadsheetProcessingService = spreadsheetProcessingService;
-            this.groupStatisticProccessingService = groupStatisticProccessingService;
+            this.statisticProcessingService = statisticProcessingService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ImportFile(IFormFile formFile)
+        public async ValueTask<IActionResult> GetStatistics()
         {
-            IFormFile importFile = Request.Form.Files[0];
-            List<Student> students = new List<Student>();
+            await this.statisticProcessingService.AddOrUpdateStatisticAsync();
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                importFile.CopyTo(stream);
-                stream.Position = 0;
-                students = await this.spreadsheetProcessingService
-                    .ProcessImportRequest(stream);
-            }
+            IQueryable<Statistic> statistics = this.statisticProcessingService.RetrieveAllStatistics();
 
-            await this.groupStatisticProccessingService
-                .CheckStatisticOfList(students);
-
-            return RedirectToAction("GetStudents", "Student");
+            return View(statistics);
         }
 
         private readonly ILogger<HomeController> _logger;
