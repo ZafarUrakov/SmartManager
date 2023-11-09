@@ -38,7 +38,7 @@ namespace SmartManager.Services.Foundations.ConfigurWebhook
 
             var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-            var webhookAddress = $@"{botConfiguration.HostAdress}/bot/{botConfiguration.Token}";
+            var webhookAddress = $"https://smartmanager-b210ccd2cf61.herokuapp.com/bot/{botConfiguration.Token}";
 
             this.logger.LogInformation("Setting webhook");
 
