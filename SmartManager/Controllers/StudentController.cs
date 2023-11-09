@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SmartManager.Models.Students;
 using SmartManager.Services.Processings.GroupsStatistics;
 using SmartManager.Services.Processings.PaymentStatistics;
@@ -7,6 +8,8 @@ using SmartManager.Services.Processings.Statistics;
 using SmartManager.Services.Processings.Students;
 using SmartManager.Services.Processings.StudentsStatistics;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
