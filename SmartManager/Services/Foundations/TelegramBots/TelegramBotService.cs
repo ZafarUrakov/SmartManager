@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using SmartManager.Brokers.Telegrams;
 using SmartManager.Models.Students;
 using SmartManager.Models.TelegramInformations;
+using SmartManager.Services.Processings.Payments;
 using SmartManager.Services.Processings.Students;
 using SmartManager.Services.Processings.TelegramInformations;
 using System;
@@ -54,6 +55,63 @@ namespace SmartManager.Services.Foundations.TelegramBots
                 await HandleErrorAsync(ex);
             }
         }
+        public async ValueTask SendAttendanceMassageToStudents(Student student, bool IsPresent)
+        {
+            var telegramInformation = this.telegramInformationProcessingService
+                .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
+            if (IsPresent is true)
+            {
+                await this.telegramBroker.SendTextMessageAsync(
+                       telegramInformation.TelegramId,
+                       $"{student.GivenName} {student.Surname} is present!");
+            }
+            else
+            {
+                await this.telegramBroker.SendTextMessageAsync(
+                      telegramInformation.TelegramId,
+                      $"{student.GivenName} {student.Surname} is not present!");
+            }
+        }
+
+        public async ValueTask SendPaymentMessageToStudents(Student oldStudent, bool isPaid)
+        {
+            try
+            {
+                var telegramInformation1 = this.telegramInformationProcessingService
+                    .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == oldStudent.Id);
+                var currentDate = DateTime.Now;
+
+                if (currentDate.Day == 1)
+                {
+                    var students = this.studentProcessingService.RetrieveAllStudents();
+
+                    foreach (var student in students)
+                    {
+                        var telegramInformation = this.telegramInformationProcessingService
+                            .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
+
+                        var paymentMessage = $"Dear {student.GivenName} {student.Surname}, it's time to pay your monthly fee. Please proceed with the payment.";
+
+                        await this.telegramBroker.SendTextMessageAsync(
+                            telegramInformation.TelegramId,
+                            paymentMessage);
+                    }
+
+                    this.logger.LogInformation("Payment messages sent successfully.");
+                }
+                else if(isPaid == true)
+                {
+                    await this.telegramBroker.SendTextMessageAsync(
+                     telegramInformation1.TelegramId,
+                     $"{oldStudent.GivenName} {oldStudent.Surname}, thanks for pay.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await HandleErrorAsync(ex);
+            }
+        }
+
 
         public ValueTask HandleErrorAsync(Exception ex)
         {
@@ -132,24 +190,6 @@ namespace SmartManager.Services.Foundations.TelegramBots
             }
 
             return false;
-        }
-
-        public async ValueTask SendAttendanceMassageToStudents(Student student, bool IsPresent)
-        {
-            var telegramInformation = this.telegramInformationProcessingService
-                .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
-            if (IsPresent is true)
-            {
-                await this.telegramBroker.SendTextMessageAsync(
-                       telegramInformation.TelegramId,
-                       $"{student.GivenName} {student.Surname} is present!");
-            }
-            else
-            {
-                await this.telegramBroker.SendTextMessageAsync(
-                      telegramInformation.TelegramId,
-                      $"{student.GivenName} {student.Surname} is not present!");
-            }
         }
     }
 }
