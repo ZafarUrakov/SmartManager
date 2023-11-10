@@ -1,8 +1,10 @@
 ﻿@using SmartManager.Models.Groups;
 @model IQueryable<Group>
+
 @{
-    ViewData["Title"] = "ShowGroupsForpayments";
+    ViewData["Title"] = "GetGroups";
 }
+
 <style>
     .table th {
         white-space: nowrap;
@@ -48,7 +50,7 @@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-dark">Payments</h2>
+            <h2 class="text-dark">Group List</h2>
         </div>
     </div>
     <br />
@@ -71,8 +73,6 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Group Name</th>
-                <th scope="col">Not Paid</th>
-                <th scope="col">All</th>
             </tr>
         </thead>
         <tbody>
@@ -85,20 +85,16 @@
                         <td>@item.GroupName</td>
                         <td>
                             <div class="button-container">
-                                <span class="action-buttons">
-                                    <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetNotPaidStudents" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-opencollective" alt="Open Collective Icon"></i> Students
+                                <div class="action-buttons">
+                                    <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetStudentsWithPayments" class="btn btn-primary">
+                                        <i class="bi bi-opencollective" alt="Open Collective Icon"></i> Paids
                                     </a>
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="button-container">
-                                <span class="action-buttons">
-                                    <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetStudentsWithPayments" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-opencollective" alt="Open Collective Icon"></i> Students
+                                </div>
+                                <div class="action-buttons">
+                                    <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetNotPaidStudents" class="btn btn-danger">
+                                        <i class="bi bi-opencollective" alt="Open Collective Icon"></i> NotPaids
                                     </a>
-                                </span>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -107,7 +103,6 @@
             }
         </tbody>
     </table>
-
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

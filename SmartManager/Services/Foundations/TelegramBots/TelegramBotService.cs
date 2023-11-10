@@ -25,16 +25,19 @@ namespace SmartManager.Services.Foundations.TelegramBots
         private readonly ITelegramBroker telegramBroker;
         private readonly IStudentProcessingService studentProcessingService;
         private readonly ITelegramInformationProcessingService telegramInformationProcessingService;
+        private readonly IPaymentProcessingService paymentProcessingService;
         public TelegramBotService(
             ILogger<TelegramBotService> logger,
             ITelegramBroker telegramBroker,
             IStudentProcessingService studentProcessingService,
-            ITelegramInformationProcessingService telegramInformationProcessingService)
+            ITelegramInformationProcessingService telegramInformationProcessingService,
+            IPaymentProcessingService paymentProcessingService)
         {
             this.logger = logger;
             this.telegramBroker = telegramBroker;
             this.studentProcessingService = studentProcessingService;
             this.telegramInformationProcessingService = telegramInformationProcessingService;
+            this.paymentProcessingService = paymentProcessingService;
         }
 
         public async ValueTask EchoAsync(Update update)
@@ -85,6 +88,24 @@ namespace SmartManager.Services.Foundations.TelegramBots
                        $"{student.GivenName} {student.Surname} your payment has been successfully received. Good study!");
             }
         }
+
+        public async ValueTask SendReminderMessageToStudents(Guid studentId, bool remainder)
+        {
+            var student = await this.studentProcessingService.RetrieveStudentByIdAsync(studentId);
+
+            var telegramInformation = this.telegramInformationProcessingService
+                .RetrieveAllTelegramInformations()
+                .FirstOrDefault(t => t.StudentId == student.Id);
+
+            if (remainder is true)
+            {
+                await this.telegramBroker.SendTextMessageAsync(
+                    telegramInformation.TelegramId,
+                    $"Hello {student.GivenName} {student.Surname}, " +
+                    $"a friendly reminder that your payment is due soon. Please ensure timely payment. Thank you!");
+            }
+        }
+
 
         public ValueTask HandleErrorAsync(Exception ex)
         {
