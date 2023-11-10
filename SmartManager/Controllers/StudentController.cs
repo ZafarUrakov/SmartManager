@@ -80,7 +80,7 @@ namespace SmartManager.Controllers
         {
             var newStudent = await this.studentProcessingService.AddStudentAsync(student);
 
-            await this.groupStatisticProccessingService
+            await this.studentsStatisticProccessingService
                  .UpdateStatisticsByStudentAsync(student);
 
             await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(student);
