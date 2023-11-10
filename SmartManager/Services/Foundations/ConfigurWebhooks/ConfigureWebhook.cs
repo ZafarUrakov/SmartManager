@@ -24,20 +24,16 @@ namespace SmartManager.Services.Foundations.ConfigurWebhook
         private readonly ILogger<ConfigureWebhook> logger;
         private readonly IServiceProvider serviceProvider;
         private readonly BotConfiguration botConfiguration;
-        private readonly ITelegramInformationProcessingService telegramInformationProcessingService;
-        private readonly IStudentProcessingService studentProcessingService;
 
         public ConfigureWebhook(
             ILogger<ConfigureWebhook> logger,
             IServiceProvider serviceProvider,
-            IConfiguration configuration,
-            ITelegramInformationProcessingService telegramInformationProcessingService)
+            IConfiguration configuration)
         {
             this.logger = logger;
             this.serviceProvider = serviceProvider;
             this.botConfiguration = configuration
                 .GetSection("BotConfiguration").Get<BotConfiguration>();
-            this.telegramInformationProcessingService = telegramInformationProcessingService;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -56,7 +52,6 @@ namespace SmartManager.Services.Foundations.ConfigurWebhook
                     chatId: 1924521160,
                     text: "Webhook starting work..");
 
-                await SendMonthlyPaymentMessageToStudents(botClient);
 
                 await botClient.SetWebhookAsync(
                         url: webhookAddress,
@@ -79,30 +74,5 @@ namespace SmartManager.Services.Foundations.ConfigurWebhook
                 text: "Bot sleeping");
         }
 
-        private async ValueTask SendMonthlyPaymentMessageToStudents(ITelegramBotClient botClient)
-        {
-            var telegramInformation1 = this.telegramInformationProcessingService
-                .RetrieveAllTelegramInformations();
-            var currentDate = DateTime.Now;
-
-            if (currentDate.Day == 10)
-            {
-                var students = this.studentProcessingService.RetrieveAllStudents();
-
-                foreach (var student in students)
-                {
-                    var telegramInformation = this.telegramInformationProcessingService
-                        .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
-
-                    var paymentMessage = $"Dear {student.GivenName} {student.Surname}, it's time to pay your monthly fee. Please proceed with the payment.";
-
-                    await botClient.SendTextMessageAsync(
-                        telegramInformation.TelegramId,
-                        paymentMessage);
-                }
-
-                this.logger.LogInformation("Payment messages sent successfully.");
-            }
-        }
     }
 }
