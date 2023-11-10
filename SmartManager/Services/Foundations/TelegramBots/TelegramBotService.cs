@@ -5,6 +5,7 @@
 
 using Microsoft.Extensions.Logging;
 using SmartManager.Brokers.Telegrams;
+using SmartManager.Models.Students;
 using SmartManager.Models.TelegramInformations;
 using SmartManager.Services.Processings.Students;
 using SmartManager.Services.Processings.TelegramInformations;
@@ -131,6 +132,24 @@ namespace SmartManager.Services.Foundations.TelegramBots
             }
 
             return false;
+        }
+
+        public async ValueTask SendAttendanceMassageToStudents(Student student, bool IsPresent)
+        {
+            var telegramInformation = this.telegramInformationProcessingService
+                .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
+            if (IsPresent is true)
+            {
+                await this.telegramBroker.SendTextMessageAsync(
+                       telegramInformation.TelegramId,
+                       $"{student.GivenName} {student.Surname} is present!");
+            }
+            else
+            {
+                await this.telegramBroker.SendTextMessageAsync(
+                      telegramInformation.TelegramId,
+                      $"{student.GivenName} {student.Surname} is not present!");
+            }
         }
     }
 }
