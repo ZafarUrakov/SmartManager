@@ -5,6 +5,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using SmartManager.Models.Attendances;
+using SmartManager.Services.Foundations.TelegramBots;
 using SmartManager.Services.Processings.Attendances;
 using SmartManager.Services.Processings.Students;
 using System;
@@ -16,13 +17,16 @@ namespace SmartManager.Controllers
     {
         private readonly IAttendanceProcessingService attendanceProcessingService;
         private readonly IStudentProcessingService studentProcessingService;
+        private readonly ITelegramBotService telegramBotService;
 
         public AttendanceController(
             IAttendanceProcessingService attendanceProcessingService,
-            IStudentProcessingService studentProcessingService)
+            IStudentProcessingService studentProcessingService,
+            ITelegramBotService telegramBotService)
         {
             this.attendanceProcessingService = attendanceProcessingService;
             this.studentProcessingService = studentProcessingService;
+            this.telegramBotService = telegramBotService;
         }
 
         [HttpPost]
@@ -40,6 +44,8 @@ namespace SmartManager.Controllers
             };
 
             await this.attendanceProcessingService.AddAttendanceAsync(attendance);
+
+            await this.telegramBotService.SendAttendanceMassageToStudents(student, isPresent);
 
             return RedirectToAction("GetStudentsWithGroup", "Student");
         }
