@@ -1,4 +1,4 @@
-﻿//===========================
+//===========================
 // Copyright (c) Tarteeb LLC
 // Managre quickly and easy
 //===========================
@@ -17,12 +17,12 @@ namespace SmartManager.Controllers
     {
         private readonly IAttendanceProcessingService attendanceProcessingService;
         private readonly IStudentProcessingService studentProcessingService;
-        private readonly ITelegramBotService telegramBotService;
+        private readonly TelegramBotService telegramBotService;
 
         public AttendanceController(
             IAttendanceProcessingService attendanceProcessingService,
             IStudentProcessingService studentProcessingService,
-            ITelegramBotService telegramBotService)
+            TelegramBotService telegramBotService)
         {
             this.attendanceProcessingService = attendanceProcessingService;
             this.studentProcessingService = studentProcessingService;
