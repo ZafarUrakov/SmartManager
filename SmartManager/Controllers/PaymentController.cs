@@ -57,10 +57,11 @@ namespace SmartManager.Controllers
             return RedirectToAction("GetPayment", "Student");
         }
 
+
         [HttpPost]
-        public async ValueTask<ActionResult> PostPayment([FromForm] Payment payment)
+        public async ValueTask<ActionResult> RemainderToStudents(Guid studentId, bool remainder = true)
         {
-            await this.paymentProcessingService.AddPaymentAsync(payment);
+            await this.telegramBotService.SendReminderMessageToStudents(studentId, remainder);
 
             return RedirectToAction("GetPayment", "Student");
         }

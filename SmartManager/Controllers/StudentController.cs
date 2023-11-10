@@ -124,6 +124,13 @@ namespace SmartManager.Controllers
             IQueryable<Student> students =
                 this.studentProcessingService.RetrieveAllStudents().Where(s => s.GroupId == groupId);
 
+            var paidStudentIds = this.paymentProcessingService.RetrieveAllPayments()
+                .Where(p => p.IsPaid)
+                .Select(p => p.StudentId)
+                .ToList();
+
+            students = students.Where(s => paidStudentIds.Contains(s.Id));
+
             return View(students);
         }
 
@@ -132,13 +139,11 @@ namespace SmartManager.Controllers
             IQueryable<Student> students =
                 this.studentProcessingService.RetrieveAllStudents().Where(s => s.GroupId == groupId);
 
-            // Retrieve the IDs of students with payments
             var paidStudentIds = this.paymentProcessingService.RetrieveAllPayments()
                 .Where(p => p.IsPaid)
                 .Select(p => p.StudentId)
                 .ToList();
 
-            // Filter out paid students
             students = students.Where(s => !paidStudentIds.Contains(s.Id));
 
             return View(students);

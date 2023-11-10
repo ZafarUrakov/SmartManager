@@ -1,18 +1,37 @@
-﻿@using SmartManager.Models.Students;
-@model IQueryable<Student>
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-T3+41DSEZ8OHAA2OBLRnYYpISdADlUDT2I1nMrfIIj99brEWfF+e18H3IdV92b/V" crossorigin="anonymous" />
 </head>
 <body>
+    @using SmartManager.Models.Students;
+    @model IQueryable<Student>
 
     @{
         ViewData["Title"] = "GetStudentWithPayment";
     }
     <style>
         .btn-md-custom {
-            padding: 0.3rem 0.75rem;
+            padding: 0.5rem 1rem;
             font-size: 1rem;
+        }
+
+        .btn-payment,
+        .btn-remainder {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+        }
+
+        .btn-payment {
+            background-color: #28a745; /* Зеленый цвет для кнопки "Paid" */
+            color: #fff;
+        }
+
+        .btn-remainder {
+            background-color: #ffc107; /* Желтый цвет для кнопки "Remind" */
+            color: #000;
         }
     </style>
 
@@ -22,7 +41,7 @@
                 <h2 class="text-dark">Student </h2>
             </div>
             <div class="col-6 text-end">
-                <a asp-controller="Student" asp-action="" class="btn btn-primary">
+                <a asp-controller="Student" asp-action="" class="btn btn-primary btn-md-custom">
                     <i class="bi bi-plus-circle"></i> &nbsp; Add New Student
                 </a>
             </div>
@@ -51,6 +70,7 @@
                     <th scope="col">PhoneNumber</th>
                     <th scope="col">GroupName</th>
                     <th scope="col">Payments</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,11 +85,15 @@
                             <td>@item.PhoneNumber</td>
                             <td>@item.GroupName</td>
                             <td>
-                                <button class="btn btn-success toggle-attendance" data-student-id="@item.Id" data-is-present="true">
+                                <button class="btn btn-primary btn-md-custom btn-payment toggle-payment" data-student-id="@item.Id" data-is-paid="true">
                                     <i class="bi bi-check-circle"></i> Paid
                                 </button>
                             </td>
-
+                            <td>
+                                <button class="btn btn-primary btn-md-custom btn-remainder toggle-remainder" data-student-id="@item.Id" data-remainder="true">
+                                    <i class="bi bi-alarm"></i> Remind
+                                </button>
+                            </td>
                         </tr>
                         i++;
                     }
@@ -86,32 +110,31 @@
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $(".toggle-attendance").click(function () {
+
+            $(".toggle-payment").click(function () {
                 var button = $(this);
                 var studentId = button.data("student-id");
-                var isPayed = button.data("is-payed");
+                var isPaid = button.data("is-paid");
 
-                $.post("/Payment/UpdatePayment", { studentId: studentId, isPayed: isPayed }, function (data) {
+                $.post("/Payment/UpdatePayment", { studentId: studentId, isPaid: isPaid }, function (data) {
                     if (data.success) {
-                        if (isPayed) {
+                        if (isPaid) {
                             button.removeClass("btn-success").addClass("btn-secondary");
                         } else {
                             button.removeClass("btn-danger").addClass("btn-secondary");
                         }
-                    } else {
-                        alert("Произошла ошибка при обновлении посещаемости.");
                     }
                 });
             });
 
-            $("#searchInput").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $(".searchable-row").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            $(".toggle-remainder").click(function () {
+                var button = $(this);
+                var studentId = button.data("student-id");
+                var remainder = button.data("remainder");
+
+                $.post("/Payment/RemainderToStudents", { studentId: studentId, remainder: remainder }, function (data) {
+                    if (data.success) {
+                    }
                 });
             });
         });
