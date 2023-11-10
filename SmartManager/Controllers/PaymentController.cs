@@ -5,7 +5,6 @@
 
 using Microsoft.AspNetCore.Mvc;
 using SmartManager.Models.Payments;
-using SmartManager.Services.Foundations.TelegramBots;
 using SmartManager.Services.Processings.Payments;
 using SmartManager.Services.Processings.PaymentStatistics;
 using SmartManager.Services.Processings.Students;
@@ -20,18 +19,15 @@ namespace SmartManager.Controllers
         private readonly IPaymentProcessingService paymentProcessingService;
         private readonly IStudentProcessingService studentProcessingService;
         private readonly IPaymentStatisticsProccessingService paymentStatisticsProccessingService;
-        private readonly ITelegramBotService telegramBotService;
 
         public PaymentController(
             IPaymentProcessingService paymentProcessingService,
             IStudentProcessingService studentProcessingService,
-            IPaymentStatisticsProccessingService paymentStatisticsProccessingService,
-            ITelegramBotService telegramBotService)
+            IPaymentStatisticsProccessingService paymentStatisticsProccessingService)
         {
             this.paymentProcessingService = paymentProcessingService;
             this.studentProcessingService = studentProcessingService;
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
-            this.telegramBotService = telegramBotService;
         }
         [HttpPost]
         public async ValueTask<ActionResult> UpdatePaymentAsync(Guid studentId, bool isPayed = true)
@@ -43,11 +39,9 @@ namespace SmartManager.Controllers
             persistedPayment.StudentId = studentId;
             persistedPayment.Date = DateTime.Now;
             persistedPayment.Amount = 900000;
-
+            //hi
 
             var student = await this.studentProcessingService.RetrieveStudentByIdAsync(studentId);
-
-            await this.telegramBotService.SendPaymentMessageToStudents(student, isPayed);
 
             await this.paymentProcessingService.ModifyPaymentAsync(persistedPayment);
 
