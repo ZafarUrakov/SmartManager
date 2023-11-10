@@ -108,6 +108,7 @@ namespace SmartManager
             services.AddTransient<IStudentsStatisticService, StudentsStatisticService>();
             services.AddTransient<IGroupsStatisticService, GroupsStatisticService>();
             services.AddTransient<ITelegramInformationService, TelegramInformationService>();
+            services.AddTransient<ITelegramBotService, TelegramBotService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
