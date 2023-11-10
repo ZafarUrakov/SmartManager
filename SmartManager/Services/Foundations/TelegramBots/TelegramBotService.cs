@@ -73,36 +73,16 @@ namespace SmartManager.Services.Foundations.TelegramBots
             }
         }
 
-        public async ValueTask SendPaymentMessageToStudents(Student oldStudent, bool isPaid)
+        public async ValueTask SendPaymentMessageToStudents(Student student, bool isPaid)
         {
-            try
+            var telegramInformation = this.telegramInformationProcessingService
+                .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
+
+            if (isPaid is true)
             {
-                var telegramInformation1 = this.telegramInformationProcessingService
-                    .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == oldStudent.Id);
-                var currentDate = DateTime.Now;
-
-                if (currentDate.Day == 1)
-                {
-                    var students = this.studentProcessingService.RetrieveAllStudents();
-
-                    foreach (var student in students)
-                    {
-                        var telegramInformation = this.telegramInformationProcessingService
-                            .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
-
-                        var paymentMessage = $"Dear {student.GivenName} {student.Surname}, it's time to pay your monthly fee. Please proceed with the payment.";
-
-                        await this.telegramBroker.SendTextMessageAsync(
-                            telegramInformation.TelegramId,
-                            paymentMessage);
-                    }
-
-                    this.logger.LogInformation("Payment messages sent successfully.");
-                }
-            }
-            catch (Exception ex)
-            {
-                await HandleErrorAsync(ex);
+                await this.telegramBroker.SendTextMessageAsync(
+                       telegramInformation.TelegramId,
+                       $"{student.GivenName} {student.Surname} is present!");
             }
         }
 
