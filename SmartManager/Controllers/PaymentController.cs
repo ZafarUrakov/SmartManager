@@ -30,17 +30,8 @@ namespace SmartManager.Controllers
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
         }
         [HttpPost]
-        public async ValueTask<ActionResult> UpdatePaymentAsync(Guid studentId, bool isPayed)
+        public async ValueTask<ActionResult> UpdatePaymentAsync(Guid studentId, bool isPayed = true)
         {
-            var payment = new Payment
-            {
-                Id = Guid.NewGuid(),
-                Amount = 900000,
-                Date = DateTime.Now,
-                IsPaid = isPayed,
-                StudentId = studentId
-            };
-
             var persistedPayment =
                 this.paymentProcessingService.RetrieveAllPayments()
                     .FirstOrDefault(s => s.StudentId == studentId);

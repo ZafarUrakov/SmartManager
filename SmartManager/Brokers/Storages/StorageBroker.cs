@@ -45,11 +45,20 @@ namespace SmartManager.Brokers.Storages
 
         public async ValueTask<T> UpdateAsync<T>(T @object)
         {
-            var broker = new StorageBroker();
-            broker.Entry(@object).State = EntityState.Modified;
-            await broker.SaveChangesAsync();
+            try
+            {
+                var broker = new StorageBroker();
+                broker.Entry(@object).State = EntityState.Modified;
+                await broker.SaveChangesAsync();
 
-            return @object;
+                return @object;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
         }
 
         public async ValueTask<T> DeleteAsync<T>(T @object)
