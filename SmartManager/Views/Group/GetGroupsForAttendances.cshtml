@@ -1,8 +1,10 @@
 ﻿@using SmartManager.Models.Groups;
 @model IQueryable<Group>
+
 @{
     ViewData["Title"] = "ShowGroupsForpayments";
 }
+
 <style>
     .table th {
         white-space: nowrap;
@@ -71,8 +73,6 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Group Name</th>
-                <th scope="col">Not Paid</th>
-                <th scope="col">All</th>
             </tr>
         </thead>
         <tbody>
@@ -85,20 +85,11 @@
                         <td>@item.GroupName</td>
                         <td>
                             <div class="button-container">
-                                <span class="action-buttons">
-                                    <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetNotPaidStudents" class="btn btn-primary btn-sm">
+                                <div class="action-buttons">
+                                    <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetStudentsWithAttendances" class="btn btn-primary btn-sm">
                                         <i class="bi bi-opencollective" alt="Open Collective Icon"></i> Students
                                     </a>
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="button-container">
-                                <span class="action-buttons">
-                                    <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetStudentsWithPayments" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-opencollective" alt="Open Collective Icon"></i> Students
-                                    </a>
-                                </span>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -107,7 +98,6 @@
             }
         </tbody>
     </table>
-
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

@@ -3,16 +3,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Add necessary head elements here -->
 </head>
 <body>
-    <br />
-    <a href="javascript:history.back()" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back
-    </a>
 
     @{
-        ViewData["Title"] = "ShowstudentsWithGroup";
+        ViewData["Title"] = "GetStudentWithAttendance";
     }
     <style>
         .btn-md-custom {
@@ -20,10 +15,16 @@
             font-size: 1rem;
         }
     </style>
+
     <div class="container p-3">
         <div class="row pt-4">
             <div class="col-6">
-                <h2 class="text-dark">Student List</h2>
+                <h2 class="text-dark">Student </h2>
+            </div>
+            <div class="col-6 text-end">
+                <a asp-controller="Student" asp-action="" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> &nbsp; Add New Student
+                </a>
             </div>
         </div>
         <br />
@@ -37,7 +38,7 @@
 
         <div class="row">
             <div class="col-12">
-                <p>Total students: @Model.Count()</p>
+                <p>Total Students: @Model.Count()</p>
             </div>
         </div>
 
@@ -45,11 +46,11 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">FirstName</th>
-                    <th scope="col">LastName</th>
+                    <th scope="col">GivenName</th>
+                    <th scope="col">Surname</th>
                     <th scope="col">PhoneNumber</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
+                    <th scope="col">GroupName</th>
+                    <th scope="col">Attendance</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,17 +63,14 @@
                             <td>@item.GivenName</td>
                             <td>@item.Surname</td>
                             <td>@item.PhoneNumber</td>
+                            <td>@item.GroupName</td>
                             <td>
-                                <a href="#" class="btn btn-primary btn-md-custom"
-                                   onclick="updateAttendance('@item.Id', true)">
-                                    Present
-                                </a>
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-danger btn-md-custom"
-                                   onclick="updateAttendance('@item.Id', false)">
-                                    Absent
-                                </a>
+                                <button class="btn btn-success toggle-attendance" data-student-id="@item.Id" data-is-present="true">
+                                    <i class="bi bi-check-circle"></i> Present
+                                </button>
+                                <button class="btn btn-danger toggle-attendance" data-student-id="@item.Id" data-is-present="false">
+                                    <i class="bi bi-x-circle"></i> Absent
+                                </button>
                             </td>
                         </tr>
                         i++;
@@ -81,18 +79,27 @@
             </tbody>
         </table>
     </div>
-
-    <script>
-        function updateAttendance(studentId, isPresent) {
-            // Use JavaScript to dynamically construct the URL and then redirect
-            var url = "/Attendance/UpdateAttendance?studentId=" + studentId + "&isPresent=" + isPresent;
-            window.location.href = url;
-        }
-    </script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
+            $(".toggle-attendance").click(function () {
+                var button = $(this);
+                var studentId = button.data("student-id");
+                var isPresent = button.data("is-present");
+
+                $.post("/Attendance/UpdateAttendance", { studentId: studentId, isPresent: isPresent }, function (data) {
+                    if (data.success) {
+                        if (isPresent) {
+                            button.removeClass("btn-success").addClass("btn-secondary");
+                        } else {
+                            button.removeClass("btn-danger").addClass("btn-secondary");
+                        }
+                    } else {
+                        alert("An error occurred while updating attendance.");
+                    }
+                });
+            });
+
             $("#searchInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
                 $(".searchable-row").filter(function () {

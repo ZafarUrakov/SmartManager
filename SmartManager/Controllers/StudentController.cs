@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartManager.Models.Payments;
 using SmartManager.Models.Students;
 using SmartManager.Services.Processings.GroupsStatistics;
+using SmartManager.Services.Processings.Payments;
 using SmartManager.Services.Processings.PaymentStatistics;
 using SmartManager.Services.Processings.Spreadsheets;
 using SmartManager.Services.Processings.Statistics;
@@ -23,6 +25,7 @@ namespace SmartManager.Controllers
         private readonly IGroupsStatisticProccessingService groupsStatisticProccessingService;
         private readonly IStatisticProcessingService statisticProcessingService;
         private readonly ISpreadsheetsProcessingService spreadsheetsProcessingService;
+        private readonly IPaymentProcessingService paymentProcessingService;
 
         public StudentController(
             IStudentProcessingService studentProcessingService,
@@ -30,7 +33,8 @@ namespace SmartManager.Controllers
             IStudentsStatisticProccessingService groupStatisticProccessingService,
             IGroupsStatisticProccessingService groupsStatisticProccessingService,
             IStatisticProcessingService statisticProcessingService,
-            ISpreadsheetsProcessingService spreadsheetsProcessingService)
+            ISpreadsheetsProcessingService spreadsheetsProcessingService,
+            IPaymentProcessingService paymentProcessingService)
         {
             this.studentProcessingService = studentProcessingService;
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
@@ -38,6 +42,7 @@ namespace SmartManager.Controllers
             this.groupsStatisticProccessingService = groupsStatisticProccessingService;
             this.statisticProcessingService = statisticProcessingService;
             this.spreadsheetsProcessingService = spreadsheetsProcessingService;
+            this.paymentProcessingService = paymentProcessingService;
         }
 
         public IActionResult Import()
@@ -85,6 +90,7 @@ namespace SmartManager.Controllers
             await this.statisticProcessingService.AddOrUpdateStatisticAsync();
 
             this.groupsStatisticProccessingService.ModifyGroupsStatisticAsync(newStudent);
+            await this.paymentProcessingService.UpdatePaymentAsync(student);
 
             return RedirectToAction("GetStudents");
         }
@@ -104,9 +110,11 @@ namespace SmartManager.Controllers
             return View(students);
         }
 
-        public IActionResult GetStudentsWithAttendances()
+        public IActionResult GetStudentsWithAttendances(Guid groupId)
         {
-            IQueryable<Student> students = this.studentProcessingService.RetrieveAllStudents();
+            IQueryable<Student> students =
+                this.studentProcessingService.RetrieveAllStudents()
+                    .Where(student => student.GroupId == groupId);
 
             return View(students);
         }
@@ -119,6 +127,30 @@ namespace SmartManager.Controllers
             return View(students);
         }
 
+        public IActionResult GetNotPaidStudents(Guid groupId, bool isPaid)
+        {
+            IQueryable<Student> students =
+                this.studentProcessingService.RetrieveAllStudents().Where(s => s.GroupId == groupId);
+            List<Payment> payments = new List<Payment>();
+            List<Payment> notPaidStudents = new List<Payment>();
+
+
+            foreach (var item in students)
+            {
+                var payment = this.paymentProcessingService.RetrieveAllPayments().FirstOrDefault(p => p.StudentId == item.Id);
+                payments.Add((Payment)payment);
+            }
+
+            foreach (var item in payments)
+            {
+                if(!item.IsPaid)
+                {
+                    notPaidStudents.Add(item);
+                }
+            }
+            return View(students);
+        }
+
         public async ValueTask<ActionResult> GetStudentAsync(Guid Id)
         {
             var student =
@@ -126,6 +158,7 @@ namespace SmartManager.Controllers
 
             return Ok(student);
         }
+
 
         [HttpGet]
         public IActionResult PutStudent(Guid studentId)
