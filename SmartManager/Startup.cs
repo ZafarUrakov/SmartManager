@@ -79,7 +79,7 @@ namespace SmartManager
             services.AddTransient<ISpreadsheetBroker, SpreadsheetBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
-            services.AddTransient<ITelegramBroker,  TelegramBroker>();
+            services.AddTransient<ITelegramBroker, TelegramBroker>();
         }
 
         private static void ConfigureProcessingServices(IServiceCollection services)

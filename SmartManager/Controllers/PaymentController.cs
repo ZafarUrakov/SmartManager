@@ -39,6 +39,7 @@ namespace SmartManager.Controllers
             persistedPayment.StudentId = studentId;
             persistedPayment.Date = DateTime.Now;
             persistedPayment.Amount = 900000;
+            //hi
 
             var student = await this.studentProcessingService.RetrieveStudentByIdAsync(studentId);
 

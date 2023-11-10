@@ -5,7 +5,6 @@
 
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,11 +21,11 @@ namespace SmartManager.Brokers.Storages
 
         public async ValueTask<T> InsertAsync<T>(T @object)
         {
-                var broker = new StorageBroker();
-                broker.Entry(@object).State = EntityState.Added;
-                await broker.SaveChangesAsync();
+            var broker = new StorageBroker();
+            broker.Entry(@object).State = EntityState.Added;
+            await broker.SaveChangesAsync();
 
-                return @object;
+            return @object;
         }
 
         public IQueryable<T> SelectAll<T>() where T : class
@@ -58,7 +57,7 @@ namespace SmartManager.Brokers.Storages
 
                 throw ex;
             }
-            
+
         }
 
         public async ValueTask<T> DeleteAsync<T>(T @object)

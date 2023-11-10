@@ -52,7 +52,8 @@ namespace SmartManager.Services.Foundations.ConfigurWebhook
                         url: webhookAddress,
                         allowedUpdates: Array.Empty<UpdateType>(),
                         cancellationToken: cancellationToken);
-            }catch(Exception ex) { throw ex; }
+            }
+            catch (Exception ex) { throw ex; }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

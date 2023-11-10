@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SmartManager.Models.Payments;
 using SmartManager.Models.Students;
 using SmartManager.Services.Processings.GroupsStatistics;
 using SmartManager.Services.Processings.Payments;
