@@ -54,6 +54,7 @@
                     <th scope="col">GivenName</th>
                     <th scope="col">Surname</th>
                     <th scope="col">PhoneNumber</th>
+                    <th scope="col">GroupName</th>
                     <th scope="col">Edit</th>
                     <th scope="col">Delete</th>
                 </tr>
@@ -68,6 +69,7 @@
                             <td>@item.GivenName</td>
                             <td>@item.Surname</td>
                             <td>@item.PhoneNumber</td>
+                            <td>@item.GroupName</td>
                             <td>
                                 <a asp-route-studentId="@item.Id" asp-action="PutStudent" class="btn btn-primary btn-md-custom">
                                     <i class="bi bi-pencil"></i>

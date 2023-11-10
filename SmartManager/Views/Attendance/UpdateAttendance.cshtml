@@ -1,25 +1,12 @@
 ﻿@using SmartManager.Models.Students;
 @model IQueryable<Student>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Add necessary head elements here -->
+    <!-- Include necessary styles and scripts here -->
 </head>
 <body>
-    <br />
-    <a href="javascript:history.back()" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back
-    </a>
-
-    @{
-        ViewData["Title"] = "ShowstudentsWithGroup";
-    }
-    <style>
-        .btn-md-custom {
-            padding: 0.3rem 0.75rem;
-            font-size: 1rem;
-        }
-    </style>
     <div class="container p-3">
         <div class="row pt-4">
             <div class="col-6">
@@ -48,8 +35,8 @@
                     <th scope="col">FirstName</th>
                     <th scope="col">LastName</th>
                     <th scope="col">PhoneNumber</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
+                    <th scope="col">Present</th>
+                    <th scope="col">Absent</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,16 +50,14 @@
                             <td>@item.Surname</td>
                             <td>@item.PhoneNumber</td>
                             <td>
-                                <a href="#" class="btn btn-primary btn-md-custom"
-                                   onclick="updateAttendance('@item.Id', true)">
-                                    Present
-                                </a>
+                                <button class="btn btn-primary btn-md-custom" onclick="updateAttendance('@item.Id', true)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-danger btn-md-custom"
-                                   onclick="updateAttendance('@item.Id', false)">
-                                    Absent
-                                </a>
+                                <button class="btn btn-danger btn-md-custom" onclick="updateAttendance('@item.Id', false)">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
                             </td>
                         </tr>
                         i++;
@@ -82,16 +67,24 @@
         </table>
     </div>
 
-    <script>
-        function updateAttendance(studentId, isPresent) {
-            // Use JavaScript to dynamically construct the URL and then redirect
-            var url = "/Attendance/UpdateAttendance?studentId=" + studentId + "&isPresent=" + isPresent;
-            window.location.href = url;
-        }
-    </script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function updateAttendance(studentId, isPresent) {
+            $.ajax({
+                url: "/Attendance/UpdateAttendance",
+                type: "POST",
+                data: { studentId: studentId, isPresent: isPresent },
+                success: function (data) {
+                    // Optionally handle success (e.g., show a success message)
+                    console.log("Attendance updated successfully");
+                },
+                error: function (error) {
+                    // Optionally handle errors
+                    console.error("Error updating attendance: " + error.responseText);
+                }
+            });
+        }
+
         $(document).ready(function () {
             $("#searchInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();

@@ -22,6 +22,7 @@
     <None Include="Views\Student\GetStudents.cshtml" />
     <None Include="Views\Student\GetStudentsWithGroup.cshtml" />
     <None Include="Views\Student\GetStudentsWithPayments.cshtml" />
+    <None Include="Views\Student\Import.cshtml" />
     <None Include="Views\Student\PostStudent.cshtml" />
     <None Include="Views\Student\PutStudent.cshtml" />
     <None Include="Views\_ViewImports.cshtml" />

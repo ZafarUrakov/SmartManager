@@ -4,6 +4,7 @@
 //===========================
 
 using SmartManager.Models.Payments;
+using SmartManager.Models.Students;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,5 +18,6 @@ namespace SmartManager.Services.Processings.Payments
         IQueryable<Payment> RetrieveAllPayments();
         ValueTask<Payment> ModifyPaymentAsync(Payment payment);
         ValueTask<Payment> RemovePaymentAsync(Guid paymentid);
+        ValueTask<Payment> UpdatePaymentAsync(Student student);
     }
 }
