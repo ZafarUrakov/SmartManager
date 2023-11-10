@@ -4,10 +4,13 @@
 //===========================
 
 using Microsoft.Extensions.Logging;
-using SmartManager.Brokers.Loggings;
+using SmartManager.Brokers.Telegrams;
+using SmartManager.Models.TelegramInformations;
+using SmartManager.Services.Processings.Students;
+using SmartManager.Services.Processings.TelegramInformations;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -17,14 +20,19 @@ namespace SmartManager.Services.Foundations.TelegramBots
     public class TelegramBotService : ITelegramBotService
     {
         private readonly ILogger<TelegramBotService> logger;
-        private readonly ITelegramBotClient telegramBotClient;
-
+        private readonly ITelegramBroker telegramBroker;
+        private readonly IStudentProcessingService studentProcessingService;
+        private readonly ITelegramInformationProcessingService telegramInformationProcessingService;
         public TelegramBotService(
-            ITelegramBotClient telegramBotClient, 
-            ILogger<TelegramBotService> logger)
+            ILogger<TelegramBotService> logger,
+            ITelegramBroker telegramBroker,
+            IStudentProcessingService studentProcessingService,
+            ITelegramInformationProcessingService telegramInformationProcessingService)
         {
-            this.telegramBotClient = telegramBotClient;
             this.logger = logger;
+            this.telegramBroker = telegramBroker;
+            this.studentProcessingService = studentProcessingService;
+            this.telegramInformationProcessingService = telegramInformationProcessingService;
         }
 
         public async ValueTask EchoAsync(Update update)
@@ -69,18 +77,60 @@ namespace SmartManager.Services.Foundations.TelegramBots
 
         private async ValueTask BotOnCallBackQueryRecieved(CallbackQuery callbackQuery)
         {
-            await telegramBotClient.SendTextMessageAsync(
-                chatId: callbackQuery.Message.Chat.Id,
-                text: $"{callbackQuery.Data}");
+            await telegramBroker.SendTextMessageAsync(
+                callbackQuery.Message.Chat.Id,
+                $"{callbackQuery.Data}");
         }
-
         private async ValueTask BotOnMessageRecieved(Message message)
         {
+            var student = this.studentProcessingService
+                .RetrieveAllStudents().FirstOrDefault(s => s.PhoneNumber == message.Text);
+
             this.logger.LogInformation($"A message has arrieved: {message.Type}");
 
-            await this.telegramBotClient.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: "A message has arrieved to the bot.");
+            if (message.Text is not null)
+            {
+                if (IsPhoneNumber((message.Text)))
+                {
+                    if (student is null)
+                    {
+                        await this.telegramBroker.SendTextMessageAsync(
+                            message.Chat.Id,
+                            $"Sorry, you are in our database. Contact support.");
+                    }
+                    else
+                    {
+                        await this.telegramBroker.SendTextMessageAsync(
+                            message.Chat.Id,
+                            $"Thank you {message.Chat.FirstName} {message.Chat.FirstName}, you will receive a progress report.");
+
+                        TelegramInformation telegramInformation = new TelegramInformation
+                        {
+                            Id = Guid.NewGuid(),
+                            TelegramId = message.Chat.Id,
+                            Message = message.Text,
+                            StudentId = student.Id,
+                        };
+
+                        await this.telegramInformationProcessingService.AddTelegramInformationAsync(telegramInformation);
+                    }
+                }
+                else
+                {
+                    await this.telegramBroker.SendTextMessageAsync(
+                        message.Chat.Id,
+                        $"Welcome to Smart Manager, please send us the phone number. ");
+                }
+            }
+        }
+        private bool IsPhoneNumber(string text)
+        {
+            if (text.StartsWith("+") || long.TryParse(text, out _))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
