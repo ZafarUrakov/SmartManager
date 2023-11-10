@@ -99,19 +99,12 @@ namespace SmartManager.Services.Foundations.TelegramBots
 
                     this.logger.LogInformation("Payment messages sent successfully.");
                 }
-                else if(isPaid == true)
-                {
-                    await this.telegramBroker.SendTextMessageAsync(
-                     telegramInformation1.TelegramId,
-                     $"{oldStudent.GivenName} {oldStudent.Surname}, thanks for pay.");
-                }
             }
             catch (Exception ex)
             {
                 await HandleErrorAsync(ex);
             }
         }
-
 
         public ValueTask HandleErrorAsync(Exception ex)
         {
@@ -161,7 +154,8 @@ namespace SmartManager.Services.Foundations.TelegramBots
                     {
                         await this.telegramBroker.SendTextMessageAsync(
                             message.Chat.Id,
-                            $"Thank you {message.Chat.FirstName} {message.Chat.FirstName}, you will receive a progress report.");
+                            $"Thank you {message.Chat.FirstName} {message.Chat.LastName}, " +
+                            $"you will receive a progress report.");
 
                         TelegramInformation telegramInformation = new TelegramInformation
                         {
