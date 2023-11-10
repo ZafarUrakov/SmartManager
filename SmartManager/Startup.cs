@@ -11,6 +11,7 @@ using SmartManager.Brokers.DateTimes;
 using SmartManager.Brokers.Loggings;
 using SmartManager.Brokers.Spreadsheets;
 using SmartManager.Brokers.Storages;
+using SmartManager.Brokers.Telegrams;
 using SmartManager.Models.BotConfigurations;
 using SmartManager.Services.Foundations.Attendances;
 using SmartManager.Services.Foundations.ConfigurWebhook;
@@ -23,6 +24,7 @@ using SmartManager.Services.Foundations.Statistics;
 using SmartManager.Services.Foundations.Students;
 using SmartManager.Services.Foundations.StudentsStatistics;
 using SmartManager.Services.Foundations.TelegramBots;
+using SmartManager.Services.Foundations.TelegramInformations;
 using SmartManager.Services.Processings.Attendances;
 using SmartManager.Services.Processings.Groups;
 using SmartManager.Services.Processings.GroupsStatistics;
@@ -32,6 +34,7 @@ using SmartManager.Services.Processings.Spreadsheets;
 using SmartManager.Services.Processings.Statistics;
 using SmartManager.Services.Processings.Students;
 using SmartManager.Services.Processings.StudentsStatistics;
+using SmartManager.Services.Processings.TelegramInformations;
 using Telegram.Bot;
 
 namespace SmartManager
@@ -76,6 +79,7 @@ namespace SmartManager
             services.AddTransient<ISpreadsheetBroker, SpreadsheetBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
+            services.AddTransient<ITelegramBroker,  TelegramBroker>();
         }
 
         private static void ConfigureProcessingServices(IServiceCollection services)
@@ -89,6 +93,7 @@ namespace SmartManager
             services.AddTransient<IPaymentStatisticsProccessingService, PaymentStatisticsProccessingService>();
             services.AddTransient<IStudentsStatisticProccessingService, StudentsStatisticProccessingService>();
             services.AddTransient<IGroupsStatisticProccessingService, GroupsStatisticProccessingService>();
+            services.AddTransient<ITelegramInformationProcessingService, TelegramInformationProcessingService>();
         }
 
         private static void ConfigureFoundationServices(IServiceCollection services)
@@ -102,6 +107,7 @@ namespace SmartManager
             services.AddTransient<IPaymentStatisticService, PaymentStatisticService>();
             services.AddTransient<IStudentsStatisticService, StudentsStatisticService>();
             services.AddTransient<IGroupsStatisticService, GroupsStatisticService>();
+            services.AddTransient<ITelegramInformationService, TelegramInformationService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
