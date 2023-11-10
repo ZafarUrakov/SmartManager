@@ -17,12 +17,12 @@ namespace SmartManager.Controllers
     {
         private readonly IAttendanceProcessingService attendanceProcessingService;
         private readonly IStudentProcessingService studentProcessingService;
-        private readonly TelegramBotService telegramBotService;
+        private readonly ITelegramBotService telegramBotService;
 
         public AttendanceController(
             IAttendanceProcessingService attendanceProcessingService,
             IStudentProcessingService studentProcessingService,
-            TelegramBotService telegramBotService)
+            ITelegramBotService telegramBotService)
         {
             this.attendanceProcessingService = attendanceProcessingService;
             this.studentProcessingService = studentProcessingService;

@@ -63,26 +63,26 @@ namespace SmartManager.Services.Foundations.TelegramBots
             {
                 await this.telegramBroker.SendTextMessageAsync(
                        telegramInformation.TelegramId,
-                       $"{student.GivenName} {student.Surname} is present!");
+                       $"{student.GivenName} {student.Surname} is present today!");
             }
             else
             {
                 await this.telegramBroker.SendTextMessageAsync(
                       telegramInformation.TelegramId,
-                      $"{student.GivenName} {student.Surname} is not present!");
+                      $"{student.GivenName} {student.Surname} is not present today!");
             }
         }
 
-        public async ValueTask SendPaymentMessageToStudents(Student student, bool isPaid)
+        public async ValueTask SendPaymentMessageToStudents(Student student, bool IsPaid)
         {
             var telegramInformation = this.telegramInformationProcessingService
                 .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
 
-            if (isPaid is true)
+            if (IsPaid is true)
             {
                 await this.telegramBroker.SendTextMessageAsync(
                        telegramInformation.TelegramId,
-                       $"{student.GivenName} {student.Surname} is present!");
+                       $"{student.GivenName} {student.Surname} your payment has been successfully received. Good study!");
             }
         }
 
@@ -128,7 +128,7 @@ namespace SmartManager.Services.Foundations.TelegramBots
                     {
                         await this.telegramBroker.SendTextMessageAsync(
                             message.Chat.Id,
-                            $"Sorry, you are in our database. Contact support.");
+                            $"Sorry, you are not in our database. Contact support.");
                     }
                     else
                     {

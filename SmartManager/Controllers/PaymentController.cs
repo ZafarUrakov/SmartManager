@@ -22,6 +22,7 @@ namespace SmartManager.Controllers
         private readonly IPaymentStatisticsProccessingService paymentStatisticsProccessingService;
         private readonly ITelegramBotService telegramBotService;
 
+
         public PaymentController(
             IPaymentProcessingService paymentProcessingService,
             IStudentProcessingService studentProcessingService,
@@ -49,9 +50,9 @@ namespace SmartManager.Controllers
 
             await this.paymentProcessingService.ModifyPaymentAsync(persistedPayment);
 
-            await this.telegramBotService.SendPaymentMessageToStudents(student, isPayed);
-
             await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(student);
+
+            await this.telegramBotService.SendPaymentMessageToStudents(student, isPayed);
 
             return RedirectToAction("GetPayment", "Student");
         }
