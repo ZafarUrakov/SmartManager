@@ -21,7 +21,7 @@ namespace SmartManager.Controllers
     {
         private readonly IStudentProcessingService studentProcessingService;
         private readonly IPaymentStatisticsProccessingService paymentStatisticsProccessingService;
-        private readonly IStudentsStatisticProccessingService groupStatisticProccessingService;
+        private readonly IStudentsStatisticProccessingService studentsStatisticProccessingService;
         private readonly IGroupsStatisticProccessingService groupsStatisticProccessingService;
         private readonly IStatisticProcessingService statisticProcessingService;
         private readonly ISpreadsheetsProcessingService spreadsheetsProcessingService;
@@ -30,7 +30,7 @@ namespace SmartManager.Controllers
         public StudentController(
             IStudentProcessingService studentProcessingService,
             IPaymentStatisticsProccessingService paymentStatisticsProccessingService,
-            IStudentsStatisticProccessingService groupStatisticProccessingService,
+            IStudentsStatisticProccessingService studentsStatisticProccessingService,
             IGroupsStatisticProccessingService groupsStatisticProccessingService,
             IStatisticProcessingService statisticProcessingService,
             ISpreadsheetsProcessingService spreadsheetsProcessingService,
@@ -38,7 +38,7 @@ namespace SmartManager.Controllers
         {
             this.studentProcessingService = studentProcessingService;
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
-            this.groupStatisticProccessingService = groupStatisticProccessingService;
+            this.studentsStatisticProccessingService = studentsStatisticProccessingService;
             this.groupsStatisticProccessingService = groupsStatisticProccessingService;
             this.statisticProcessingService = statisticProcessingService;
             this.spreadsheetsProcessingService = spreadsheetsProcessingService;
@@ -64,7 +64,7 @@ namespace SmartManager.Controllers
                     .ProcessImportRequest(stream);
             }
 
-            await this.groupStatisticProccessingService
+            await this.studentsStatisticProccessingService
                 .CheckStatisticOfList(students);
 
             return RedirectToAction(nameof(GetStudents));
@@ -127,27 +127,20 @@ namespace SmartManager.Controllers
             return View(students);
         }
 
-        public IActionResult GetNotPaidStudents(Guid groupId, bool isPaid)
+        public IActionResult GetNotPaidStudents(Guid groupId)
         {
             IQueryable<Student> students =
                 this.studentProcessingService.RetrieveAllStudents().Where(s => s.GroupId == groupId);
-            List<Payment> payments = new List<Payment>();
-            List<Payment> notPaidStudents = new List<Payment>();
 
+            // Retrieve the IDs of students with payments
+            var paidStudentIds = this.paymentProcessingService.RetrieveAllPayments()
+                .Where(p => p.IsPaid)
+                .Select(p => p.StudentId)
+                .ToList();
 
-            foreach (var item in students)
-            {
-                var payment = this.paymentProcessingService.RetrieveAllPayments().FirstOrDefault(p => p.StudentId == item.Id);
-                payments.Add((Payment)payment);
-            }
+            // Filter out paid students
+            students = students.Where(s => !paidStudentIds.Contains(s.Id));
 
-            foreach (var item in payments)
-            {
-                if(!item.IsPaid)
-                {
-                    notPaidStudents.Add(item);
-                }
-            }
             return View(students);
         }
 
