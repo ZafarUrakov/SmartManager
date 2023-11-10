@@ -9,6 +9,7 @@ using SmartManager.Services.Processings.Payments;
 using SmartManager.Services.Processings.PaymentStatistics;
 using SmartManager.Services.Processings.Students;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmartManager.Controllers
@@ -36,13 +37,21 @@ namespace SmartManager.Controllers
                 Id = Guid.NewGuid(),
                 Amount = 900000,
                 Date = DateTime.Now,
-                IsPaid = true,
+                IsPaid = isPayed,
                 StudentId = studentId
             };
 
+            var persistedPayment =
+                this.paymentProcessingService.RetrieveAllPayments()
+                    .FirstOrDefault(s => s.StudentId == studentId);
+            persistedPayment.IsPaid = isPayed;
+            persistedPayment.StudentId = studentId;
+            persistedPayment.Date = DateTime.Now;
+            persistedPayment.Amount = 900000;
+
             var student = await this.studentProcessingService.RetrieveStudentByIdAsync(studentId);
 
-            await this.paymentProcessingService.AddPaymentAsync(payment);
+            await this.paymentProcessingService.ModifyPaymentAsync(persistedPayment);
 
             await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(student);
 
