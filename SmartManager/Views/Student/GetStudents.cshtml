@@ -21,7 +21,20 @@
         .btn-edit,
         .btn-delete {
             padding: 0.25rem 0.5rem;
-            font-size: 0.875rem; 
+            font-size: 0.875rem;
+        }
+
+        .custom-file-input {
+            display: none;
+        }
+
+        .custom-file-label {
+            cursor: pointer;
+        }
+
+        .custom-file-control {
+            display: flex;
+            align-items: center;
         }
     </style>
 
@@ -30,16 +43,20 @@
         <div class="row pt-4">
             <div class="col-6">
                 <h2 class="text-dark">Student List</h2>
+                <p>Total Students: @Model.Count()</p>
             </div>
             <div class="col-6 text-end">
                 <a asp-controller="Student" asp-action="PostStudent" class="btn btn-primary btn-md-custom">
                     <i class="bi bi-plus-circle"></i> &nbsp; Add New Student
                 </a>
-            </div>
-            <div class="col-6 text-end">
-                <a asp-controller="Student" asp-action="Import" class="btn btn-primary btn-md-custom">
-                    <i class="bi bi-plus-circle"></i> &nbsp; Import
-                </a>
+                <div class="custom-file custom-file-control">
+                    <label for="formFile" class="btn btn-primary btn-md-custom">
+                        <i class="bi bi-plus-circle"></i> &nbsp; Import
+                    </label>
+                    <form id="form" method="post" asp-action="ImportFile" enctype="multipart/form-data" class="d-inline-block">
+                        <input class="custom-file-input" type="file" name="formFile" id="formFile" accept=".xlsx" onchange="submitForm()" required>
+                    </form>
+                </div>
             </div>
         </div>
         <br />
@@ -50,12 +67,6 @@
             </div>
         </div>
         <br />
-
-        <div class="row">
-            <div class="col-12">
-                <p>Total Students: @Model.Count()</p>
-            </div>
-        </div>
 
         <table class="table">
             <thead>
@@ -97,8 +108,13 @@
             </tbody>
         </table>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function submitForm() {
+            document.getElementById("form").submit();
+        }
+
         $(document).ready(function () {
             $("#searchInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
