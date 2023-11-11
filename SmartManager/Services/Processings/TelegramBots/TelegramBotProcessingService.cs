@@ -175,7 +175,7 @@ namespace SmartManager.Services.Processings.TelegramBots
                         };
 
                         await this.telegramInformationProcessingService
-                            . AddTelegramInformationAsync(telegramInformation);
+                            .AddTelegramInformationAsync(telegramInformation);
                     }
                 }
                 else

@@ -3,7 +3,6 @@
 // Managre quickly and easy
 //===========================
 
-using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
