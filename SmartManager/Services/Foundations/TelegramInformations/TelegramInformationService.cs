@@ -4,7 +4,9 @@
 //===========================
 
 using SmartManager.Brokers.Storages;
+using SmartManager.Models.StudentsStatistic;
 using SmartManager.Models.TelegramInformations;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,5 +27,13 @@ namespace SmartManager.Services.Foundations.TelegramInformations
 
         public IQueryable<TelegramInformation> RetrieveAllTelegramInformations() =>
             storageBroker.SelectAllTelegramInformations();
+
+        public async ValueTask<TelegramInformation> RemoveTelegramInformationsStatisticAsync(Guid telegramInformationsStatisticId)
+        {
+            TelegramInformation telegramInformationsStatistic =
+                await this.storageBroker.SelectTelegramInformationByIdAsync(telegramInformationsStatisticId);
+
+            return await this.storageBroker.DeleteTelegramInformationAsync(telegramInformationsStatistic);
+        }
     }
 }

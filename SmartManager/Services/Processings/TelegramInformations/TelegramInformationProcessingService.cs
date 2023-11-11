@@ -5,6 +5,7 @@
 
 using SmartManager.Models.TelegramInformations;
 using SmartManager.Services.Foundations.TelegramInformations;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,5 +26,10 @@ namespace SmartManager.Services.Processings.TelegramInformations
 
         public IQueryable<TelegramInformation> RetrieveAllTelegramInformations() =>
             this.telegramInformationService.RetrieveAllTelegramInformations();
+
+        public async ValueTask<TelegramInformation> RemoveTelegramInformationsStatisticAsync(Guid telegramInformationsStatisticId)
+        {
+            return await this.telegramInformationService.RemoveTelegramInformationsStatisticAsync(telegramInformationsStatisticId);
+        }
     }
 }

@@ -202,7 +202,7 @@ namespace SmartManager.Services.Processings.TelegramBots
                     $"{student.GivenName} {student.Surname}, I will be glad to see you again" +
                     $"\nn{date.Day}-{date.Month}-{date.Year}");
 
-            await this.telegramInformationProcessingService.RemoveTelegramInformationAsync(telegramInformation.Id);
+            await this.telegramInformationProcessingService.RemoveTelegramInformationsStatisticAsync(telegramInformation.Id);
         }
 
         private bool IsPhoneNumber(string text)
