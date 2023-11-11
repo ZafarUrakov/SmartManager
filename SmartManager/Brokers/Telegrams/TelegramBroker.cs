@@ -3,8 +3,10 @@
 // Managre quickly and easy
 //===========================
 
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartManager.Brokers.Telegrams
 {
@@ -25,5 +27,21 @@ namespace SmartManager.Brokers.Telegrams
                 chatId: studentTelegramId,
                 text: message);
         }
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
+        {
+            KeyboardButton.WithRequestContact("Share Contact")
+        });
+
+        public async ValueTask SendTextMessageWithShareContactAsync(
+            long studentTelegramId,
+            string message)
+        {
+            await telegramBotClient.SendTextMessageAsync(
+            chatId: studentTelegramId,
+            text: message,
+            replyMarkup: replyKeyboardMarkup);
+        }
+
     }
 }

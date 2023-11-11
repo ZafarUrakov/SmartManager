@@ -11,5 +11,7 @@ namespace SmartManager.Services.Foundations.TelegramBots
     {
         ValueTask SendTextMessageAsync(long userTelegramId,
             string message);
+        ValueTask SendTextMessageWithShareContactAsync(long userTelegramId,
+            string message);
     }
 }
