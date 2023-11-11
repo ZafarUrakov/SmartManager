@@ -17,17 +17,21 @@
             color: white;
             display: flex;
             position: absolute;
-            right: 160px;
-            top: 80px;
+            right: 90px;
+            top: 33px;
         }
+
+            .btn-warning.btn-md-custom:hover {
+                background-color: #c9302c;
+            }
         
         .btn-black {
             background-color: #009879;
             color: white;
             display: flex;
             position: absolute;
-            right: 82px;
-            top: 80px;
+            right: 225px;
+            top: 33px;
         }
 
 
@@ -130,17 +134,36 @@
                     color: #009879;
                 }
 
+        .student-count {
+            position: absolute;
+            top: 10px;
+            left: 0px;
+            color: #333;
+            font-size: 16px;
+        }
+
 
     </style>
-    <label for="formFile" class="btn btn-warning btn-md-custom btn-black d-inline-block">
-        <i class="bi bi-plus-circle"></i> &nbsp; Import
-    </label>
-    <form id="form" method="post" asp-action="ImportFile" enctype="multipart/form-data" class="d-inline-block">
-        <input class="custom-file-input" type="file" name="formFile" id="formFile" accept=".xlsx" onchange="submitForm()" required>
-    </form>
-    <a asp-controller="Student" asp-action="PostStudent" class="btn btn-black d-inline-block">
-        <i class="bi bi-plus-circle"></i> &nbsp; New
-    </a>
+    <div style="position: relative;">
+    <div class="student-count">
+        Total Students: @Model.Count()
+    </div>
+    </div>
+
+    <div style="position: relative;">
+
+        <label for="formFile" class="btn btn-warning btn-md-custom btn-black d-inline-block">
+            <i class="bi bi-plus-circle"></i> &nbsp; Import
+        </label>
+        <form id="form" method="post" asp-action="ImportFile" enctype="multipart/form-data" class="d-inline-block">
+            <input class="custom-file-input" type="file" name="formFile" id="formFile" accept=".xlsx" onchange="submitForm()" required>
+        </form>
+
+        <a asp-controller="Student" asp-action="PostStudent" class="btn btn-black d-inline-block" style="position: absolute; right: 0;">
+            <i class="bi bi-plus-circle"></i> &nbsp; New
+        </a>
+
+    </div>
     <br />
         <div class="col-5">
             <input type="text" id="searchInput" class="form-control" placeholder="Search">
