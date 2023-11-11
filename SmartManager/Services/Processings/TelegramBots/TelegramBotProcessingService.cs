@@ -100,11 +100,18 @@ namespace SmartManager.Services.Processings.TelegramBots
 
             if (IsPaid is true)
             {
-                await this.telegramBotService.SendTextMessageAsync(
-                       telegramInformation.TelegramId,
-                       $"🧠Smart Manager🧠\n\nHello {student.GivenName} {student.Surname}, " +
-                       $"your payment has been successfully received. " +
-                       $"Good study!❤️ \n\nDate of notification: {date.Day}-{date.Month}-{date.Year}");
+                if (telegramInformation is not null)
+                {
+                    await this.telegramBotService.SendTextMessageAsync(
+                           telegramInformation.TelegramId,
+                           $"🧠Smart Manager🧠\n\nHello {student.GivenName} {student.Surname}, " +
+                           $"your payment has been successfully received. " +
+                           $"Good study!❤️ \n\nDate of notification: {date.Day}-{date.Month}-{date.Year}");
+                }
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -196,13 +203,20 @@ namespace SmartManager.Services.Processings.TelegramBots
             var telegramInformation = this.telegramInformationProcessingService
                 .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
 
-            await this.telegramBotService.SendTextMessageAsync(
-                    telegramInformation.TelegramId,
-                    $"🧠Smart Manager🧠\n\n I wish you success " +
-                    $"{student.GivenName} {student.Surname}, I will be glad to see you again" +
-                    $"\nn{date.Day}-{date.Month}-{date.Year}");
+            if (telegramInformation is not null)
+            {
+                await this.telegramBotService.SendTextMessageAsync(
+                        telegramInformation.TelegramId,
+                        $"🧠Smart Manager🧠\n\n I wish you success " +
+                        $"{student.GivenName} {student.Surname}, I will be glad to see you again" +
+                        $"\nn{date.Day}-{date.Month}-{date.Year}");
 
-            await this.telegramInformationProcessingService.RemoveTelegramInformationsStatisticAsync(telegramInformation.Id);
+                await this.telegramInformationProcessingService.RemoveTelegramInformationsStatisticAsync(telegramInformation.Id);
+            }
+            else
+            {
+                return;
+            }
         }
 
         private bool IsPhoneNumber(string text)

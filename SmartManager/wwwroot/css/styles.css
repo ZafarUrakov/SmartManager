@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #ffffff;
+    display: flex;
+    flex-direction: column; /* Устанавливаем направление flex-контейнера на вертикальное */
+    align-items: flex-start; /* Выравниваем элементы по левому краю */
+    justify-content: space-between; /* Равномерно распределяем пространство между элементами */
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 150px;
+    margin-top: auto;
+}
+
+.chart {
+    padding: 2rem;
+    border: 1px solid #f49131;
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.8);
+}
