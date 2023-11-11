@@ -7,6 +7,7 @@ using SmartManager.Models.Payments;
 using SmartManager.Models.Students;
 using SmartManager.Services.Foundations.Payments;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,7 +54,6 @@ namespace SmartManager.Services.Processings.Payments
             });
         }
 
-
         public async ValueTask<Payment> AddPaymentAsync(Payment Payment) =>
            await this.paymentService.AddPaymentAsync(Payment);
 
@@ -68,5 +68,13 @@ namespace SmartManager.Services.Processings.Payments
 
         public async ValueTask<Payment> RemovePaymentAsync(Guid Paymentid) =>
             await this.paymentService.RemovePaymentAsync(Paymentid);
+
+        public async Task CheckPaymentStatisticOfList(List<Student> students)
+        {
+            foreach (var item in students)
+            {
+                await UpdatePaymentAsync(item);
+            }
+        }
     }
 }

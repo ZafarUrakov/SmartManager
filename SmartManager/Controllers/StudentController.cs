@@ -70,6 +70,8 @@ namespace SmartManager.Controllers
             await this.studentsStatisticProccessingService
                 .CheckStatisticOfList(students);
 
+            await this.paymentProcessingService.CheckPaymentStatisticOfList(students);
+
             return RedirectToAction(nameof(GetStudents));
         }
 
