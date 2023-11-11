@@ -14,7 +14,7 @@ namespace SmartManager.Services.Processings.Payments
     public interface IPaymentProcessingService
     {
         ValueTask<Payment> UpdatePaymentAsync(Student student);
-        Task UpdatePaymentStatusForOverduePaymentsAsync(IQueryable<Student> students);
+        Task UpdatePaymentStatusForOverduePaymentsAsync();
         ValueTask<Payment> AddPaymentAsync(Payment payment);
         ValueTask<Payment> RetrievePaymentByIdAsync(Guid paymentid);
         IQueryable<Payment> RetrieveAllPayments();

@@ -25,5 +25,13 @@ namespace SmartManager.Services.Foundations.TelegramBots
                 studentTelegramId,
                 message);
         }
+        public async ValueTask SendTextMessageWithShareContactAsync(
+            long studentTelegramId,
+            string message)
+        {
+            await this.telegramBroker.SendTextMessageAsync(
+                studentTelegramId,
+                message);
+        }
     }
 }

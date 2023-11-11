@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SmartManager.Services.Processings.TelegramBots
 {
@@ -80,15 +79,15 @@ namespace SmartManager.Services.Processings.TelegramBots
             {
                 await this.telegramBotService.SendTextMessageAsync(
                        telegramInformation.TelegramId,
-                       $"🧠Smart Manager🧠\n\nHello {student.GivenName} {student.Surname} is absent today! " +
-                       $"Date of notification: {date.Day}-{date.Month}-{date.Year}");
+                       $"🧠Smart Manager🧠\n\n{student.GivenName} {student.Surname} is absent today! " +
+                       $"\n\nDate of notification: {date.Day}-{date.Month}-{date.Year}");
             }
             else
             {
                 await this.telegramBotService.SendTextMessageAsync(
                       telegramInformation.TelegramId,
-                      $"🧠Smart Manager🧠\n\nHello {student.GivenName} {student.Surname} is not present today! " +
-                      $"Date of notification: {date.Day}-{date.Month}-{date.Year}");
+                      $"🧠Smart Manager🧠\n\n{student.GivenName} {student.Surname} is not present today! " +
+                      $"\n\nDate of notification: {date.Day}-{date.Month}-{date.Year}");
             }
         }
 
@@ -105,7 +104,7 @@ namespace SmartManager.Services.Processings.TelegramBots
                        telegramInformation.TelegramId,
                        $"🧠Smart Manager🧠\n\nHello {student.GivenName} {student.Surname}, " +
                        $"your payment has been successfully received. " +
-                       $"Good study!❤️ Date of notification: {date.Day}-{date.Month}-{date.Year}");
+                       $"Good study!❤️ \n\nDate of notification: {date.Day}-{date.Month}-{date.Year}");
             }
         }
 
@@ -123,15 +122,17 @@ namespace SmartManager.Services.Processings.TelegramBots
             {
                 await this.telegramBotService.SendTextMessageAsync(
                     telegramInformation.TelegramId,
-                    $"🧠Smart Manager🧠\n\nHello {student.GivenName} {student.Surname}, " +
+                    $"🧠Smart Manager🧠\n\n{student.GivenName} {student.Surname}, " +
                     $"a friendly reminder that your payment is due soon. " +
-                    $"Please ensure timely payment. Thank you😊! Date of notification: " +
+                    $"Please ensure timely payment. Thank you😊! \n\nDate of notification: " +
                     $"{date.Day}-{date.Month}-{date.Year}");
             }
         }
 
         private async ValueTask BotOnMessageRecieved(Message message)
         {
+            var date = DateTimeOffset.Now;
+
             if (IsUserRegistered(message.Chat.Id))
             {
                 await this.telegramBotService.SendTextMessageAsync(
@@ -162,7 +163,8 @@ namespace SmartManager.Services.Processings.TelegramBots
                         await this.telegramBotService.SendTextMessageAsync(
                             message.Chat.Id,
                             $"🧠Smart Manager🧠\n\nThank you {student.GivenName} {student.Surname}, " +
-                            $"you will receive a progress report.");
+                            $"you will receive a progress report.\n\nDate of notification: " +
+                            $"{date.Day}-{date.Month}-{date.Year}");
 
                         TelegramInformation telegramInformation = new TelegramInformation
                         {
@@ -178,9 +180,9 @@ namespace SmartManager.Services.Processings.TelegramBots
                 }
                 else
                 {
-                    await this.telegramBotService.SendTextMessageAsync(
+                    await this.telegramBotService.SendTextMessageWithShareContactAsync(
                         message.Chat.Id,
-                        $"🧠Welcome I am Smart Manager🧠\n\n, " +
+                        $"🧠Welcome I am Smart Manager🧠\n\n " +
                         $"I am glad to welcome you, I am a smart assistant who will monitor your progress. " +
                         $"Please send your number📟 for my activation.");
                 }

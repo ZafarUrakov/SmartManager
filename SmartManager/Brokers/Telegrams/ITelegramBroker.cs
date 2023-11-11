@@ -11,5 +11,8 @@ namespace SmartManager.Brokers.Telegrams
     {
         ValueTask SendTextMessageAsync(long userTelegramId,
             string message);
+
+        ValueTask SendTextMessageWithShareContactAsync(long userTelegramId,
+            string message);
     }
 }

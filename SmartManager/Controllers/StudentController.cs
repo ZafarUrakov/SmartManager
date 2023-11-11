@@ -138,7 +138,7 @@ namespace SmartManager.Controllers
             var students =
                 this.studentProcessingService.RetrieveAllStudents().Where(s => s.GroupId == groupId);
 
-            await this.paymentProcessingService.UpdatePaymentStatusForOverduePaymentsAsync(students);
+            await this.paymentProcessingService.UpdatePaymentStatusForOverduePaymentsAsync();
 
             var paidStudentIds = this.paymentProcessingService.RetrieveAllPayments()
                 .Where(p => p.IsPaid)

@@ -32,7 +32,7 @@ namespace SmartManager.Services.Processings.Payments
             return await AddPaymentAsync(payment);
         }
 
-        public async Task UpdatePaymentStatusForOverduePaymentsAsync(IQueryable<Student> students)
+        public async Task UpdatePaymentStatusForOverduePaymentsAsync()
         {
             await Task.Run(() =>
             {
@@ -40,17 +40,15 @@ namespace SmartManager.Services.Processings.Payments
 
                 var currentDate = DateTime.Now;
 
-                foreach (var student in students)
+                foreach (var payment in payments)
                 {
-                    var lastPayment = payments
-                        .Where(p => p.StudentId == student.Id)
-                        .OrderByDescending(p => p.Date)
-                        .FirstOrDefault();
 
-                    if (lastPayment != null && (currentDate - lastPayment.Date).Days > 30)
+                    if (payment != null && (currentDate - payment.Date).Days >= 30)
                     {
-                        lastPayment.IsPaid = false;
+                        payment.IsPaid = false;
                     }
+
+                    this.paymentService.ModifyPaymentAsync(payment);
                 }
             });
         }
