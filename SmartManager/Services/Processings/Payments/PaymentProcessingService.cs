@@ -20,6 +20,42 @@ namespace SmartManager.Services.Processings.Payments
         {
             this.paymentService = paymentService;
         }
+
+        public async ValueTask<Payment> UpdatePaymentAsync(Student student)
+        {
+            Payment payment = new Payment();
+            payment.StudentId = student.Id;
+            payment.Date = DateTimeOffset.UtcNow;
+            payment.Amount = 0;
+            payment.IsPaid = false;
+
+            return await AddPaymentAsync(payment);
+        }
+
+        public async Task UpdatePaymentStatusForOverduePaymentsAsync(IQueryable<Student> students)
+        {
+            await Task.Run(() =>
+            {
+                var payments = this.paymentService.RetrieveAllPayments();
+
+                var currentDate = DateTime.Now;
+
+                foreach (var student in students)
+                {
+                    var lastPayment = payments
+                        .Where(p => p.StudentId == student.Id)
+                        .OrderByDescending(p => p.Date)
+                        .FirstOrDefault();
+
+                    if (lastPayment != null && (currentDate - lastPayment.Date).Days > 30)
+                    {
+                        lastPayment.IsPaid = false;
+                    }
+                }
+            });
+        }
+
+
         public async ValueTask<Payment> AddPaymentAsync(Payment Payment) =>
            await this.paymentService.AddPaymentAsync(Payment);
 
@@ -34,16 +70,5 @@ namespace SmartManager.Services.Processings.Payments
 
         public async ValueTask<Payment> RemovePaymentAsync(Guid Paymentid) =>
             await this.paymentService.RemovePaymentAsync(Paymentid);
-
-        public async ValueTask<Payment> UpdatePaymentAsync(Student student)
-        {
-            Payment payment = new Payment();
-            payment.StudentId = student.Id;
-            payment.Date = DateTimeOffset.UtcNow;
-            payment.Amount = 0;
-            payment.IsPaid = false;
-
-            return await AddPaymentAsync(payment);
-        }
     }
 }

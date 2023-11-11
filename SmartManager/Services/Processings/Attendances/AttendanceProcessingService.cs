@@ -1,4 +1,5 @@
 ﻿using SmartManager.Models.Attendances;
+using SmartManager.Models.Students;
 using SmartManager.Services.Foundations.Attendances;
 using System;
 using System.Linq;
@@ -14,8 +15,19 @@ namespace SmartManager.Services.Processings.Attendances
         {
             this.attendanceService = attendanceService;
         }
-        public async ValueTask<Attendance> AddAttendanceAsync(Attendance Attendance) =>
-           await this.attendanceService.AddAttendanceAsync(Attendance);
+        public async ValueTask<Attendance> AddAttendanceAsync(Student student, bool isPresent)
+        {
+
+            var attendance = new Attendance
+            {
+                Id = Guid.NewGuid(),
+                Student = student,
+                Date = DateTimeOffset.Now,
+                IsPresent = isPresent
+            };
+
+            return await this.attendanceService.AddAttendanceAsync(attendance);
+        }
 
         public async ValueTask<Attendance> RetrieveAttendanceByIdAsync(Guid Attendanceid) =>
             await this.attendanceService.RetrieveAttendanceByIdAsync(Attendanceid);

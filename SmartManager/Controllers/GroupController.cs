@@ -42,13 +42,14 @@ namespace SmartManager.Controllers
         [HttpPost]
         public async ValueTask<IActionResult> PostGroup(Group group)
         {
-            if (await this.groupProcessingService.EnsureGroupExistsByNameForAdd(group.GroupName) == null)
+            var specificGroup = await this.groupProcessingService.EnsureGroupExistsByNameForAdd(group.GroupName);
+            if (specificGroup == null)
             {
                 ModelState.AddModelError("GroupName", "This group already exists.");
                 return View(group);
             }
 
-            //await this.groupsStatisticProccessingService.AddGroupsStatisticAsync(group);
+            await this.groupsStatisticProccessingService.AddGroupsStatisticAsync(specificGroup);
 
             return RedirectToAction("GetGroups");
         }
@@ -81,7 +82,9 @@ namespace SmartManager.Controllers
 
             Group group = groups.SingleOrDefault(a => a.Id == groupId);
 
-            await this.groupProcessingService.RemoveGroupAsync(group.Id);
+            var deletedGroup = await this.groupProcessingService.RemoveGroupAsync(group.Id);
+
+            await this.groupsStatisticProccessingService.UpdateOtherGroupsStatistics();
 
             return RedirectToAction("GetGroups");
         }

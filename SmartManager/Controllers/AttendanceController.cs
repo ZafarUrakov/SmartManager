@@ -4,10 +4,9 @@
 //===========================
 
 using Microsoft.AspNetCore.Mvc;
-using SmartManager.Models.Attendances;
-using SmartManager.Services.Foundations.TelegramBots;
 using SmartManager.Services.Processings.Attendances;
 using SmartManager.Services.Processings.Students;
+using SmartManager.Services.Processings.TelegramBots;
 using System;
 using System.Threading.Tasks;
 
@@ -17,16 +16,16 @@ namespace SmartManager.Controllers
     {
         private readonly IAttendanceProcessingService attendanceProcessingService;
         private readonly IStudentProcessingService studentProcessingService;
-        private readonly ITelegramBotService telegramBotService;
+        private readonly ITelegramBotProcessingService telegramBotProcessingService;
 
         public AttendanceController(
             IAttendanceProcessingService attendanceProcessingService,
             IStudentProcessingService studentProcessingService,
-            ITelegramBotService telegramBotService)
+            ITelegramBotProcessingService telegramBotProcessingService)
         {
             this.attendanceProcessingService = attendanceProcessingService;
             this.studentProcessingService = studentProcessingService;
-            this.telegramBotService = telegramBotService;
+            this.telegramBotProcessingService = telegramBotProcessingService;
         }
 
         [HttpPost]
@@ -35,27 +34,11 @@ namespace SmartManager.Controllers
             var student =
                 await this.studentProcessingService.RetrieveStudentByIdAsync(studentId);
 
-            var attendance = new Attendance
-            {
-                Id = Guid.NewGuid(),
-                Student = student,
-                Date = DateTimeOffset.Now,
-                IsPresent = isPresent
-            };
+            await this.attendanceProcessingService.AddAttendanceAsync(student, isPresent);
 
-            await this.attendanceProcessingService.AddAttendanceAsync(attendance);
-
-            await this.telegramBotService.SendAttendanceMassageToStudents(student, isPresent);
+            await this.telegramBotProcessingService.SendAttendanceMassageToStudents(student, isPresent);
 
             return RedirectToAction("GetStudentsWithGroup", "Student");
-        }
-
-        [HttpPost]
-        public async ValueTask<ActionResult> PostAttendance([FromForm] Attendance attendance)
-        {
-            await this.attendanceProcessingService.AddAttendanceAsync(attendance);
-
-            return RedirectToAction("GetStudents", "Student");
         }
     }
 }

@@ -20,5 +20,6 @@ namespace SmartManager.Services.Processings.GroupsStatistics
         IQueryable<GroupsStatistic> RetrieveAllGroupsStatistics();
         void ModifyGroupsStatisticAsync(Student student);
         ValueTask<GroupsStatistic> RemoveGroupsStatisticAsync(Guid groupsStatisticId);
+        ValueTask UpdateOtherGroupsStatistics();
     }
 }

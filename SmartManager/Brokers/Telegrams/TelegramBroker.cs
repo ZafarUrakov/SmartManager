@@ -5,7 +5,6 @@
 
 using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Types.Enums;
 
 namespace SmartManager.Brokers.Telegrams
 {

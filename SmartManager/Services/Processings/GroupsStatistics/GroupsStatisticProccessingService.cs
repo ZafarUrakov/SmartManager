@@ -3,11 +3,11 @@
 // Managre quickly and easy
 //===========================
 
+using Microsoft.Data.Sqlite;
 using SmartManager.Models.Groups;
 using SmartManager.Models.GroupsStatistics;
 using SmartManager.Models.Students;
 using SmartManager.Services.Foundations.GroupsStatistics;
-using SmartManager.Services.Processings.Groups;
 using SmartManager.Services.Processings.Students;
 using System;
 using System.Linq;
@@ -19,48 +19,57 @@ namespace SmartManager.Services.Processings.GroupsStatistics
     {
         private readonly IGroupsStatisticService groupsStatisticService;
         private readonly IStudentProcessingService studentProcessingService;
-        private readonly IGroupProcessingService groupProcessingService;
 
         public GroupsStatisticProccessingService(
             IGroupsStatisticService groupsStatisticService,
-            IStudentProcessingService studentProcessingService,
-            IGroupProcessingService groupProcessingService)
+            IStudentProcessingService studentProcessingService)
         {
             this.groupsStatisticService = groupsStatisticService;
             this.studentProcessingService = studentProcessingService;
-            this.groupProcessingService = groupProcessingService;
         }
         public async ValueTask<GroupsStatistic> AddGroupsStatisticAsync(Group group)
         {
-            var students = this.studentProcessingService.RetrieveAllStudents();
-            var studentsWithGroup = this.studentProcessingService
-                .RetrieveAllStudents().Where(s => s.GroupId == group.Id);
-
-            decimal studentsCount = students.Count();
-            decimal studentsCountWithGroup = studentsWithGroup.Count();
-
-            decimal studentsPercentageWithGroup = (studentsCountWithGroup / studentsCount) * 100;
-
-            var groupsStatistic = this.groupsStatisticService
-                .RetrieveAllGroupsStatistics().FirstOrDefault(g => g.Name == group.GroupName);
-
-            if (groupsStatistic is null)
+            try
             {
-                GroupsStatistic newGroupsStatistic = new GroupsStatistic
+                var students = this.studentProcessingService.RetrieveAllStudents();
+                var studentsWithGroup = students.Where(s => s.GroupId == group.Id);
+
+                decimal studentsCount = students.Count();
+                decimal studentsCountWithGroup = studentsWithGroup.Count();
+                decimal studentsPercentageWithGroup =
+                    (studentsCount != 0) ? (studentsCountWithGroup / studentsCount) * 100 : 0;
+
+                var groupsStatistic = this.groupsStatisticService
+                    .RetrieveAllGroupsStatistics().FirstOrDefault(g => g.Name == group.GroupName);
+
+                if (groupsStatistic is null)
                 {
-                    Id = Guid.NewGuid(),
-                    Name = group.GroupName,
-                    Percentage = studentsPercentageWithGroup,
-                    GroupId = group.Id,
-                };
+                    GroupsStatistic newGroupsStatistic = new GroupsStatistic
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = group.GroupName,
+                        Percentage = studentsPercentageWithGroup,
+                        GroupId = group.Id,
+                    };
 
-                return await this.groupsStatisticService.AddGroupsStatisticAsync(newGroupsStatistic);
+                    return await this.groupsStatisticService.AddGroupsStatisticAsync(newGroupsStatistic);
+                }
+                else
+                {
+                    groupsStatistic.Percentage = studentsPercentageWithGroup;
+
+                    return await this.groupsStatisticService.ModifyGroupsStatisticAsync(groupsStatistic);
+                }
             }
-            else
+            catch (SqliteException ex)
             {
-                groupsStatistic.Percentage = studentsPercentageWithGroup;
-
-                return await this.groupsStatisticService.ModifyGroupsStatisticAsync(groupsStatistic);
+                Console.WriteLine($"SQLite Exception: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
             }
         }
 
@@ -163,7 +172,7 @@ namespace SmartManager.Services.Processings.GroupsStatistics
         public async ValueTask<GroupsStatistic> RemoveGroupsStatisticAsync(Guid groupsStatisticid) =>
             await this.groupsStatisticService.RemoveGroupsStatisticAsync(groupsStatisticid);
 
-        private async Task UpdateOtherGroupsStatistics()
+        public async ValueTask UpdateOtherGroupsStatistics()
         {
             var updatedStudents = this.studentProcessingService.RetrieveAllStudents();
 
