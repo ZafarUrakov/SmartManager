@@ -34,15 +34,17 @@ namespace SmartManager.Controllers
             this.telegramBotProcessingService = telegramBotProcessingService;
         }
         [HttpPost]
-        public async ValueTask<ActionResult> UpdatePaymentAsync(Guid studentId, bool isPayed = true)
+        public async ValueTask<ActionResult> UpdatePaymentAsync(Guid studentId, bool isPaid = true, decimal amount = 0)
         {
             var persistedPayment =
                 this.paymentProcessingService.RetrieveAllPayments()
                     .FirstOrDefault(s => s.StudentId == studentId);
-            persistedPayment.IsPaid = isPayed;
+
+            persistedPayment.IsPaid = isPaid;
             persistedPayment.StudentId = studentId;
             persistedPayment.Date = DateTime.Now;
-            persistedPayment.Amount = 900000;
+
+            persistedPayment.Amount = amount > 0 ? amount : 900000;
 
             var student = await this.studentProcessingService.RetrieveStudentByIdAsync(studentId);
 
@@ -50,10 +52,11 @@ namespace SmartManager.Controllers
 
             await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(student);
 
-            await this.telegramBotProcessingService.SendPaymentMessageToStudents(student, isPayed);
+            await this.telegramBotProcessingService.SendPaymentMessageToStudents(student, isPaid);
 
             return RedirectToAction("GetPayment", "Student");
         }
+
 
 
         [HttpPost]
