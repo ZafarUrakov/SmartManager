@@ -4,11 +4,10 @@
 //===========================
 
 using Microsoft.AspNetCore.Mvc;
-using SmartManager.Models.Payments;
-using SmartManager.Services.Foundations.TelegramBots;
 using SmartManager.Services.Processings.Payments;
 using SmartManager.Services.Processings.PaymentStatistics;
 using SmartManager.Services.Processings.Students;
+using SmartManager.Services.Processings.TelegramBots;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,19 +19,19 @@ namespace SmartManager.Controllers
         private readonly IPaymentProcessingService paymentProcessingService;
         private readonly IStudentProcessingService studentProcessingService;
         private readonly IPaymentStatisticsProccessingService paymentStatisticsProccessingService;
-        private readonly ITelegramBotService telegramBotService;
+        private readonly ITelegramBotProcessingService telegramBotProcessingService;
 
 
         public PaymentController(
             IPaymentProcessingService paymentProcessingService,
             IStudentProcessingService studentProcessingService,
             IPaymentStatisticsProccessingService paymentStatisticsProccessingService,
-            ITelegramBotService telegramBotService)
+            ITelegramBotProcessingService telegramBotProcessingService)
         {
             this.paymentProcessingService = paymentProcessingService;
             this.studentProcessingService = studentProcessingService;
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
-            this.telegramBotService = telegramBotService;
+            this.telegramBotProcessingService = telegramBotProcessingService;
         }
         [HttpPost]
         public async ValueTask<ActionResult> UpdatePaymentAsync(Guid studentId, bool isPayed = true)
@@ -44,7 +43,6 @@ namespace SmartManager.Controllers
             persistedPayment.StudentId = studentId;
             persistedPayment.Date = DateTime.Now;
             persistedPayment.Amount = 900000;
-            //hi
 
             var student = await this.studentProcessingService.RetrieveStudentByIdAsync(studentId);
 
@@ -52,7 +50,7 @@ namespace SmartManager.Controllers
 
             await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(student);
 
-            await this.telegramBotService.SendPaymentMessageToStudents(student, isPayed);
+            await this.telegramBotProcessingService.SendPaymentMessageToStudents(student, isPayed);
 
             return RedirectToAction("GetPayment", "Student");
         }
@@ -61,7 +59,7 @@ namespace SmartManager.Controllers
         [HttpPost]
         public async ValueTask<ActionResult> RemainderToStudents(Guid studentId, bool remainder = true)
         {
-            await this.telegramBotService.SendReminderMessageToStudents(studentId, remainder);
+            await this.telegramBotProcessingService.SendReminderMessageToStudents(studentId, remainder);
 
             return RedirectToAction("GetPayment", "Student");
         }

@@ -35,54 +35,47 @@ namespace SmartManager.Services.Processings.PaymentStatistics
         }
         public async ValueTask<PaymentStatistic> AddPaymentStatisticAsync(Student student)
         {
-            try
+            var students = this.studentProcessingService.RetrieveAllStudents();
+            var group = await this.groupProcessingService.RetrieveGroupByIdAsync(student.GroupId);
+
+            decimal totalStudents = 0;
+            decimal paids = 0;
+
+            TotalCountStudentsAndPayments(student, students, ref totalStudents, ref paids);
+
+            var paymentStatistic = this.paymentStatisticService
+                .RetrieveAllPaymentStatistics().FirstOrDefault(p => p.GroupId == group.Id);
+
+            if (paymentStatistic is null)
             {
-                var students = this.studentProcessingService.RetrieveAllStudents();
-                var group = await this.groupProcessingService.RetrieveGroupByIdAsync(student.GroupId);
-
-                decimal totalStudents = 0;
-                decimal paids = 0;
-
-                TotalCountStudentsAndPayments(student, students, ref totalStudents, ref paids);
-
-                var paymentStatistic = this.paymentStatisticService
-                    .RetrieveAllPaymentStatistics().FirstOrDefault(p => p.GroupId == group.Id);
-
-                if (paymentStatistic is null)
+                PaymentStatistic newPaymentStatistic = AddPaymentStatisticIfNotFound(group);
+                if (totalStudents != 0)
                 {
-                    PaymentStatistic newPaymentStatistic = AddPaymentStatisticIfNotFound(group);
-                    if (totalStudents != 0)
-                    {
-                        newPaymentStatistic.PaidPercentage = (paids / totalStudents) * 100;
-                        newPaymentStatistic.NotPaidPercentage = 100 - newPaymentStatistic.PaidPercentage;
-                    }
-                    else
-                    {
-                        newPaymentStatistic.PaidPercentage = 0;
-
-                        newPaymentStatistic.NotPaidPercentage = 100 - newPaymentStatistic.PaidPercentage;
-                    }
-
-                    return await this.paymentStatisticService.AddPaymentStatisticAsync(newPaymentStatistic);
+                    newPaymentStatistic.PaidPercentage = (paids / totalStudents) * 100;
+                    newPaymentStatistic.NotPaidPercentage = 100 - newPaymentStatistic.PaidPercentage;
                 }
                 else
                 {
-                    if (totalStudents != 0)
-                    {
-                        paymentStatistic.PaidPercentage = (paids / totalStudents) * 100;
-                        paymentStatistic.NotPaidPercentage = 100 - paymentStatistic.PaidPercentage;
-                    }
-                    else
-                    {
-                        paymentStatistic.PaidPercentage = 0;
-                        paymentStatistic.NotPaidPercentage = 100 - paymentStatistic.PaidPercentage;
-                    }
-                    return await this.paymentStatisticService.ModifyPaymentStatisticAsync(paymentStatistic);
+                    newPaymentStatistic.PaidPercentage = 0;
+
+                    newPaymentStatistic.NotPaidPercentage = 100 - newPaymentStatistic.PaidPercentage;
                 }
+
+                return await this.paymentStatisticService.AddPaymentStatisticAsync(newPaymentStatistic);
             }
-            catch (Exception ex)
+            else
             {
-                throw ex;
+                if (totalStudents != 0)
+                {
+                    paymentStatistic.PaidPercentage = (paids / totalStudents) * 100;
+                    paymentStatistic.NotPaidPercentage = 100 - paymentStatistic.PaidPercentage;
+                }
+                else
+                {
+                    paymentStatistic.PaidPercentage = 0;
+                    paymentStatistic.NotPaidPercentage = 100 - paymentStatistic.PaidPercentage;
+                }
+                return await this.paymentStatisticService.ModifyPaymentStatisticAsync(paymentStatistic);
             }
         }
 
@@ -119,10 +112,12 @@ namespace SmartManager.Services.Processings.PaymentStatistics
         public IQueryable<PaymentStatistic> RetrieveAllPaymentStatistics() =>
             this.paymentStatisticService.RetrieveAllPaymentStatistics();
 
-        public async ValueTask<PaymentStatistic> ModifyPaymentStatisticAsync(Student student)
+        public async Task<PaymentStatistic> ModifyPaymentStatisticAsync(Student student)
         {
-            var paymentStatistic = this.paymentStatisticService
-                .RetrieveAllPaymentStatistics().FirstOrDefault(p => p.GroupId == student.GroupId);
+            var paymentStatistic = await Task.Run(() =>
+                this.paymentStatisticService.RetrieveAllPaymentStatistics()
+                    .FirstOrDefault(p => p.GroupId == student.GroupId)
+            );
 
             return paymentStatistic;
         }

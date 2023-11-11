@@ -34,6 +34,7 @@ using SmartManager.Services.Processings.Spreadsheets;
 using SmartManager.Services.Processings.Statistics;
 using SmartManager.Services.Processings.Students;
 using SmartManager.Services.Processings.StudentsStatistics;
+using SmartManager.Services.Processings.TelegramBots;
 using SmartManager.Services.Processings.TelegramInformations;
 using Telegram.Bot;
 
@@ -79,7 +80,7 @@ namespace SmartManager
             services.AddTransient<ISpreadsheetBroker, SpreadsheetBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
-            services.AddTransient<ITelegramBroker,  TelegramBroker>();
+            services.AddTransient<ITelegramBroker, TelegramBroker>();
         }
 
         private static void ConfigureProcessingServices(IServiceCollection services)
@@ -94,6 +95,7 @@ namespace SmartManager
             services.AddTransient<IStudentsStatisticProccessingService, StudentsStatisticProccessingService>();
             services.AddTransient<IGroupsStatisticProccessingService, GroupsStatisticProccessingService>();
             services.AddTransient<ITelegramInformationProcessingService, TelegramInformationProcessingService>();
+            services.AddTransient<ITelegramBotProcessingService, TelegramBotProcessingService>();
         }
 
         private static void ConfigureFoundationServices(IServiceCollection services)

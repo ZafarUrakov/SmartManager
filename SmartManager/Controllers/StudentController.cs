@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SmartManager.Models.Payments;
 using SmartManager.Models.Students;
 using SmartManager.Services.Processings.GroupsStatistics;
 using SmartManager.Services.Processings.Payments;
@@ -134,10 +133,12 @@ namespace SmartManager.Controllers
             return View(students);
         }
 
-        public IActionResult GetNotPaidStudents(Guid groupId)
+        public async ValueTask<IActionResult> GetNotPaidStudents(Guid groupId)
         {
-            IQueryable<Student> students =
+            var students =
                 this.studentProcessingService.RetrieveAllStudents().Where(s => s.GroupId == groupId);
+
+            await this.paymentProcessingService.UpdatePaymentStatusForOverduePaymentsAsync(students);
 
             var paidStudentIds = this.paymentProcessingService.RetrieveAllPayments()
                 .Where(p => p.IsPaid)
@@ -159,14 +160,18 @@ namespace SmartManager.Controllers
 
 
         [HttpGet]
-        public IActionResult PutStudent(Guid studentId)
+        public async ValueTask<IActionResult> PutStudent(Guid studentId)
         {
-            IQueryable<Student> students = this.studentProcessingService.RetrieveAllStudents();
+            IQueryable<Student> students = await Task.Run(() =>
+            {
+                return this.studentProcessingService.RetrieveAllStudents();
+            });
 
             Student student = students.FirstOrDefault(a => a.Id == studentId);
 
             return View(student);
         }
+
 
         [HttpPost]
         public async ValueTask<IActionResult> PutStudent(Student student)
@@ -187,26 +192,19 @@ namespace SmartManager.Controllers
         [HttpGet]
         public async ValueTask<IActionResult> DeleteStudent(Guid studentId)
         {
-            try
-            {
-                var students = this.studentProcessingService.RetrieveAllStudents();
+            var students = this.studentProcessingService.RetrieveAllStudents();
 
-                var student = students.FirstOrDefault(a => a.Id == studentId);
+            var student = students.FirstOrDefault(a => a.Id == studentId);
 
-                var removedStudent = await this.studentProcessingService.RemoveStudentAsync(student.Id);
+            var removedStudent = await this.studentProcessingService.RemoveStudentAsync(student.Id);
 
-                this.groupsStatisticProccessingService.ModifyGroupsStatisticAsync(removedStudent);
+            this.groupsStatisticProccessingService.ModifyGroupsStatisticAsync(removedStudent);
 
-                await this.statisticProcessingService.AddOrUpdateStatisticAsync();
+            await this.statisticProcessingService.AddOrUpdateStatisticAsync();
 
-                await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(removedStudent);
+            await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(removedStudent);
 
-                return RedirectToAction("GetStudents");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return RedirectToAction("GetStudents");
         }
     }
 }

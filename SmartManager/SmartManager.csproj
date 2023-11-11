@@ -11,14 +11,12 @@
     <None Include="Views\Group\GetGroups.cshtml" />
     <None Include="Views\Group\GetGroupsForPayments.cshtml" />
     <None Include="Views\Group\PostGroup.cshtml" />
-    <None Include="Views\Home\GetStatistics.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
     <None Include="Views\Payments\GetPayment.cshtml" />
     <None Include="Views\Shared\Error.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
     <None Include="Views\Spreadsheet\Import.cshtml" />
-    <None Include="Views\Statistic\GetStudentGroupData.cshtml" />
     <None Include="Views\Student\GetStudents.cshtml" />
     <None Include="Views\Student\GetStudentsWithGroup.cshtml" />
     <None Include="Views\Student\GetStudentsWithPayments.cshtml" />

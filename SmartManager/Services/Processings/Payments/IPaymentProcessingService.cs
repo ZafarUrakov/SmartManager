@@ -13,11 +13,12 @@ namespace SmartManager.Services.Processings.Payments
 {
     public interface IPaymentProcessingService
     {
+        ValueTask<Payment> UpdatePaymentAsync(Student student);
+        Task UpdatePaymentStatusForOverduePaymentsAsync(IQueryable<Student> students);
         ValueTask<Payment> AddPaymentAsync(Payment payment);
         ValueTask<Payment> RetrievePaymentByIdAsync(Guid paymentid);
         IQueryable<Payment> RetrieveAllPayments();
         ValueTask<Payment> ModifyPaymentAsync(Payment payment);
         ValueTask<Payment> RemovePaymentAsync(Guid paymentid);
-        ValueTask<Payment> UpdatePaymentAsync(Student student);
     }
 }

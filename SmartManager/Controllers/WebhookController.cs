@@ -4,7 +4,7 @@
 //===========================
 
 using Microsoft.AspNetCore.Mvc;
-using SmartManager.Services.Foundations.TelegramBots;
+using SmartManager.Services.Processings.TelegramBots;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
@@ -14,10 +14,10 @@ namespace SmartManager.Controllers
     {
         [HttpPost]
         public async ValueTask<IActionResult> Post(
-            [FromServices] TelegramBotService telegramBotService,
+            [FromServices] ITelegramBotProcessingService telegramBotProcessingService,
             [FromBody] Update update)
         {
-            await telegramBotService.EchoAsync(update);
+            await telegramBotProcessingService.EchoAsync(update);
 
             return Ok();
         }
