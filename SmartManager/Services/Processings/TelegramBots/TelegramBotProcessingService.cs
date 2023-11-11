@@ -175,7 +175,7 @@ namespace SmartManager.Services.Processings.TelegramBots
                         };
 
                         await this.telegramInformationProcessingService
-                            . AddTelegramInformationAsync(telegramInformation);
+                            .AddTelegramInformationAsync(telegramInformation);
                     }
                 }
                 else
@@ -187,6 +187,22 @@ namespace SmartManager.Services.Processings.TelegramBots
                         $"Please send your number📟 for my activation.");
                 }
             }
+        }
+
+        public async ValueTask FarewellMessageToStudent(Student student)
+        {
+            var date = DateTimeOffset.Now;
+
+            var telegramInformation = this.telegramInformationProcessingService
+                .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
+
+            await this.telegramBotService.SendTextMessageAsync(
+                    telegramInformation.TelegramId,
+                    $"🧠Smart Manager🧠\n\n I wish you success " +
+                    $"{student.GivenName} {student.Surname}, I will be glad to see you again" +
+                    $"\nn{date.Day}-{date.Month}-{date.Year}");
+
+            await this.telegramInformationProcessingService.RemoveTelegramInformationAsync(telegramInformation.Id);
         }
 
         private bool IsPhoneNumber(string text)

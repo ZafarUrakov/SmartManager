@@ -16,6 +16,7 @@ namespace SmartManager.Services.Processings.TelegramBots
         ValueTask SendAttendanceMassageToStudents(Student student, bool IsPresent);
         ValueTask SendPaymentMessageToStudents(Student student, bool isPaid);
         ValueTask SendReminderMessageToStudents(Guid studentId, bool remainder);
+        ValueTask FarewellMessageToStudent(Student student);
         ValueTask HandleErrorAsync(Exception ex);
     }
 }
