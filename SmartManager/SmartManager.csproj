@@ -12,7 +12,6 @@
     <None Include="Views\Group\GetGroupsForPayments.cshtml" />
     <None Include="Views\Group\PostGroup.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Payments\GetPayment.cshtml" />
     <None Include="Views\Shared\Error.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
