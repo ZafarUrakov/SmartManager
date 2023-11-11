@@ -8,6 +8,7 @@ using SmartManager.Services.Processings.Spreadsheets;
 using SmartManager.Services.Processings.Statistics;
 using SmartManager.Services.Processings.Students;
 using SmartManager.Services.Processings.StudentsStatistics;
+using SmartManager.Services.Processings.TelegramBots;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,6 +26,7 @@ namespace SmartManager.Controllers
         private readonly IStatisticProcessingService statisticProcessingService;
         private readonly ISpreadsheetsProcessingService spreadsheetsProcessingService;
         private readonly IPaymentProcessingService paymentProcessingService;
+        private readonly ITelegramBotProcessingService telegramBotProcessingService;
 
         public StudentController(
             IStudentProcessingService studentProcessingService,
@@ -33,7 +35,8 @@ namespace SmartManager.Controllers
             IGroupsStatisticProccessingService groupsStatisticProccessingService,
             IStatisticProcessingService statisticProcessingService,
             ISpreadsheetsProcessingService spreadsheetsProcessingService,
-            IPaymentProcessingService paymentProcessingService)
+            IPaymentProcessingService paymentProcessingService,
+            ITelegramBotProcessingService telegramBotProcessingService)
         {
             this.studentProcessingService = studentProcessingService;
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
@@ -42,6 +45,7 @@ namespace SmartManager.Controllers
             this.statisticProcessingService = statisticProcessingService;
             this.spreadsheetsProcessingService = spreadsheetsProcessingService;
             this.paymentProcessingService = paymentProcessingService;
+            this.telegramBotProcessingService = telegramBotProcessingService;
         }
 
         public IActionResult Import()
@@ -203,6 +207,8 @@ namespace SmartManager.Controllers
             await this.statisticProcessingService.AddOrUpdateStatisticAsync();
 
             await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(removedStudent);
+
+            await this.telegramBotProcessingService.FarewellMessageToStudent(removedStudent);
 
             return RedirectToAction("GetStudents");
         }
