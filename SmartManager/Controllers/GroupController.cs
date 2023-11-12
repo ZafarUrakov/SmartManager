@@ -5,9 +5,11 @@
 
 using Microsoft.AspNetCore.Mvc;
 using SmartManager.Models.Groups;
+using SmartManager.Models.PaymentStatistics;
 using SmartManager.Services.Processings.Groups;
 using SmartManager.Services.Processings.GroupsStatistics;
 using SmartManager.Services.Processings.Payments;
+using SmartManager.Services.Processings.PaymentStatistics;
 using SmartManager.Services.Processings.Students;
 using System;
 using System.Linq;
@@ -21,17 +23,20 @@ namespace SmartManager.Controllers
         private readonly IStudentProcessingService studentProcessingService;
         private readonly IGroupsStatisticProccessingService groupsStatisticProccessingService;
         private readonly IPaymentProcessingService paymentProcessingService;
+        private readonly IPaymentStatisticsProccessingService paymentStatisticsProccessingService;
 
         public GroupController(
             IGroupProcessingService groupProcessingService,
             IStudentProcessingService studentProcessingService,
             IGroupsStatisticProccessingService groupsStatisticProccessingService,
-            IPaymentProcessingService paymentProcessingService)
+            IPaymentProcessingService paymentProcessingService,
+            IPaymentStatisticsProccessingService paymentStatisticsProccessingService)
         {
             this.groupProcessingService = groupProcessingService;
             this.studentProcessingService = studentProcessingService;
             this.groupsStatisticProccessingService = groupsStatisticProccessingService;
             this.paymentProcessingService = paymentProcessingService;
+            this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
         }
 
         public IActionResult PostGroup()
@@ -57,9 +62,13 @@ namespace SmartManager.Controllers
         public IActionResult GetGroups()
         {
             IQueryable<Group> groups = this.groupProcessingService.RetrieveAllGroups();
+            IQueryable<PaymentStatistic> paymentStatistics = this.paymentStatisticsProccessingService.RetrieveAllPaymentStatistics();
 
-            return View(groups);
+            var model = new Tuple<IQueryable<Group>, IQueryable<PaymentStatistic>>(groups, paymentStatistics);
+
+            return View(model);
         }
+
 
         public IActionResult GetGroupsForAttendances()
         {

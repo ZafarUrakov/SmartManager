@@ -16,7 +16,7 @@ namespace SmartManager.Services.Processings.PaymentStatistics
         ValueTask<PaymentStatistic> AddPaymentStatisticAsync(Student student);
         ValueTask<PaymentStatistic> RetrievePaymentStatisticByIdAsync(Guid paymentStatisticId);
         IQueryable<PaymentStatistic> RetrieveAllPaymentStatistics();
-        Task<PaymentStatistic> ModifyPaymentStatisticAsync(Student student);
+        ValueTask<PaymentStatistic> ModifyPaymentStatisticAsync(Student student);
         ValueTask<PaymentStatistic> RemovePaymentStatisticAsync(Guid paymentStatisticId);
     }
 }
