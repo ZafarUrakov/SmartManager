@@ -73,13 +73,12 @@
                                     <i class="bi bi-x-circle"></i> Absent
                                 </button>
                             </td>
-                            <!-- Inside the foreach loop, add the Statistics button -->
                             <td>
-                                <a asp-controller="Attendance" asp-action="ViewStatistics" asp-route-studentId="@item.Id" class="btn btn-info">
-                                    <i class="bi bi-bar-chart"></i> Statistics
+                                <!-- "Review" button linked to the ReviewAttendance action -->
+                                <a asp-controller="Attendance" asp-action="ReviewAttendance" asp-route-studentId="@item.Id" class="btn btn-info btn-md-custom">
+                                    <i class="bi bi-bar-chart"></i> Review
                                 </a>
                             </td>
-
                         </tr>
                         i++;
                     }
