@@ -10,6 +10,7 @@ using SmartManager.Services.Foundations.Spreadsheets;
 using SmartManager.Services.Processings.Groups;
 using SmartManager.Services.Processings.GroupsStatistics;
 using SmartManager.Services.Processings.PaymentStatistics;
+using SmartManager.Services.Processings.Statistics;
 using SmartManager.Services.Processings.Students;
 using System;
 using System.Collections.Generic;
@@ -25,19 +26,22 @@ namespace SmartManager.Services.Processings.Spreadsheets
         private readonly IGroupProcessingService groupProcessingService;
         private readonly IGroupsStatisticProccessingService groupsStatisticProccessingService;
         private readonly IPaymentStatisticsProccessingService paymentStatisticsProccessingService;
+        private readonly IStatisticProcessingService statisticProcessingService;
 
         public SpreadsheetsProcessingService(
             IStudentProcessingService studentProcessingService,
             IGroupProcessingService groupProcessingService,
             ISpreadsheetService spreadsheetService,
             IGroupsStatisticProccessingService groupsStatisticProccessingService,
-            IPaymentStatisticsProccessingService paymentStatisticsProccessingService)
+            IPaymentStatisticsProccessingService paymentStatisticsProccessingService,
+            IStatisticProcessingService statisticProcessingService)
         {
             this.studentProcessingService = studentProcessingService;
             this.groupProcessingService = groupProcessingService;
             this.spreadsheetService = spreadsheetService;
             this.groupsStatisticProccessingService = groupsStatisticProccessingService;
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
+            this.statisticProcessingService = statisticProcessingService;
         }
 
         public async ValueTask<List<Student>> ProcessImportRequest(MemoryStream stream)
@@ -64,6 +68,7 @@ namespace SmartManager.Services.Processings.Spreadsheets
                 await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(student);
                 await this.groupsStatisticProccessingService.AddGroupsStatisticAsync(ensureGroup);
                 await this.groupsStatisticProccessingService.AddGroupsStatisticsWithStudentsAsync(student);
+                await this.statisticProcessingService.AddOrUpdateStatisticAsync();
             }
             return mappedStudents;
         }

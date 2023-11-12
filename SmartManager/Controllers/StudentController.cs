@@ -94,7 +94,8 @@ namespace SmartManager.Controllers
 
             await this.statisticProcessingService.AddOrUpdateStatisticAsync();
 
-            this.groupsStatisticProccessingService.ModifyGroupsStatisticAsync(newStudent);
+            this.groupsStatisticProccessingService.ModifyGroupsStatisticAsync(student);
+
             await this.paymentProcessingService.UpdatePaymentAsync(student);
 
             return RedirectToAction("GetStudents");
