@@ -12,8 +12,8 @@
         ViewData["Title"] = "ShowStudents";
     }
     <style>
-        .btn-warning.btn-md-custom {
-            background-color: #d9534f;
+        .btn-white.btn-md-custom {
+            background-color: #009879;
             color: white;
             display: flex;
             position: absolute;
@@ -21,8 +21,8 @@
             top: 34px;
         }
 
-            .btn-warning.btn-md-custom:hover {
-                background-color: #c9302c;
+            .btn-white.btn-md-custom:hover {
+                background-color: #009879;
             }
         
         .btn-black {
@@ -35,7 +35,7 @@
         }
 
         .btn {
-            background-color: #8FBC8F;
+            background-color: #009879;
             color: white;
         }
 
@@ -155,7 +155,7 @@
 
     <div style="position: relative;">
 
-        <label for="formFile" class="btn btn-warning btn-md-custom btn-black d-inline-block">
+        <label for="formFile" class="btn btn-white btn-md-custom btn-black d-inline-block">
             <i class="bi bi-plus-circle"></i> &nbsp; Import
         </label>
         <form id="form" method="post" asp-action="ImportFile" enctype="multipart/form-data" class="d-inline-block">

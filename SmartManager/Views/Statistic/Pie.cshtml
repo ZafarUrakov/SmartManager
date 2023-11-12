@@ -1,0 +1,63 @@
+﻿@using SmartManager.Models.GroupsStatistics;
+@model IQueryable<GroupsStatistic>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <title></title>
+</head>
+<body>
+    <div class="">
+        <div class="chart">
+            <canvas id="doughnut" width="300" height="300"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        const ctx = document.getElementById('doughnut').getContext('2d');
+        const name = [];
+        const percentage = [];
+            @foreach(var item in Model)
+            {
+                @:name.push('@item.Name');
+                @:percentage.push('@item.Percentage');
+            }
+        const doughnut = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                    labels: name,
+                datasets: [{
+                    label: '# Percentages',
+                        data: percentage,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

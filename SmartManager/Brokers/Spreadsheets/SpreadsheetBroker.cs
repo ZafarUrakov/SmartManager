@@ -3,7 +3,7 @@
 // Managre quickly and easy
 //===========================
 
-using Bytescout.Spreadsheet;
+using OfficeOpenXml;
 using SmartManager.Models.ExternalStudents;
 using SmartManager.Models.Students;
 using System;
@@ -18,25 +18,25 @@ namespace SmartManager.Brokers.Spreadsheets
         {
             var importStudents = new List<ExternalStudent>();
 
-            Spreadsheet document = new Spreadsheet();
-
-            document.LoadFromStream(stream);
-
-            Worksheet worksheet = document.Workbook.Worksheets[0];
-
-            for (int row = 1; row <= worksheet.UsedRangeRowMax; row++)
+            using (var package = new ExcelPackage(stream))
             {
-                var externalStudent = new ExternalStudent();
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                var worksheet = package.Workbook.Worksheets[0];
 
-                externalStudent.Id = Guid.NewGuid();
-                externalStudent.GivenName = worksheet.Cell(row, 0).ToString();
-                externalStudent.Surname = worksheet.Cell(row, 1).ToString();
-                externalStudent.PhoneNumber = worksheet.Cell(row, 2).ToString();
-                string genderString = worksheet.Cell(row, 3).ToString();
-                externalStudent.Gender = ConvertToGender(genderString);
-                externalStudent.GroupName = worksheet.Cell(row, 4).ToString();
+                for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                {
+                    var externalStudent = new ExternalStudent();
 
-                importStudents.Add(externalStudent);
+                    externalStudent.Id = Guid.NewGuid();
+                    externalStudent.GivenName = worksheet.Cells[row, 1].Value?.ToString();
+                    externalStudent.Surname = worksheet.Cells[row, 2].Value?.ToString();
+                    externalStudent.PhoneNumber = worksheet.Cells[row, 3].Value?.ToString();
+                    string genderString = worksheet.Cells[row, 4].Value?.ToString();
+                    externalStudent.Gender = ConvertToGender(genderString);
+                    externalStudent.GroupName = worksheet.Cells[row, 5].Value?.ToString();
+
+                    importStudents.Add(externalStudent);
+                }
             }
 
             return importStudents;
