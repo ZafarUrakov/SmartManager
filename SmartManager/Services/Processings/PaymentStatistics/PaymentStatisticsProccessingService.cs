@@ -108,7 +108,8 @@ namespace SmartManager.Services.Processings.PaymentStatistics
         private void TotalCountStudentsAndPayments(
             Student student, IQueryable<Student> students, ref decimal totalStudents, ref decimal paids)
         {
-            var payments = this.paymentProcessingService.RetrieveAllPayments().Where(p => p.StudentId == student.Id);
+            var payments = this.paymentProcessingService.RetrieveAllPayments()
+                .Where(p => p.Student.GroupId == student.GroupId);
 
             foreach (var item in students)
             {
@@ -117,10 +118,11 @@ namespace SmartManager.Services.Processings.PaymentStatistics
 
             foreach (var payment in payments)
             {
-                if (payment.IsPaid == true)
+                if (payment.IsPaid)
                     paids++;
             }
         }
+
 
         private static PaymentStatistic AddPaymentStatisticIfNotFound(Group group)
         {

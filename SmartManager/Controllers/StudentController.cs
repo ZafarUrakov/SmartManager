@@ -190,7 +190,7 @@ namespace SmartManager.Controllers
 
             await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(updatedStudent);
 
-            //await this.paymentStatisticsProccessingService.ModifyPaymentStatisticAsync(oldStudent);
+            await this.paymentStatisticsProccessingService.ModifyPaymentStatisticAsync(oldStudent);
 
             await this.statisticProcessingService.AddOrUpdateStatisticAsync();
 
