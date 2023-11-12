@@ -10,6 +10,7 @@ using SmartManager.Services.Processings.Groups;
 using SmartManager.Services.Processings.GroupsStatistics;
 using SmartManager.Services.Processings.Payments;
 using SmartManager.Services.Processings.PaymentStatistics;
+using SmartManager.Services.Processings.Statistics;
 using SmartManager.Services.Processings.Students;
 using System;
 using System.Linq;
@@ -24,19 +25,22 @@ namespace SmartManager.Controllers
         private readonly IGroupsStatisticProccessingService groupsStatisticProccessingService;
         private readonly IPaymentProcessingService paymentProcessingService;
         private readonly IPaymentStatisticsProccessingService paymentStatisticsProccessingService;
+        private readonly IStatisticProcessingService statisticProcessingService;
 
         public GroupController(
             IGroupProcessingService groupProcessingService,
             IStudentProcessingService studentProcessingService,
             IGroupsStatisticProccessingService groupsStatisticProccessingService,
             IPaymentProcessingService paymentProcessingService,
-            IPaymentStatisticsProccessingService paymentStatisticsProccessingService)
+            IPaymentStatisticsProccessingService paymentStatisticsProccessingService,
+            IStatisticProcessingService statisticProcessingService)
         {
             this.groupProcessingService = groupProcessingService;
             this.studentProcessingService = studentProcessingService;
             this.groupsStatisticProccessingService = groupsStatisticProccessingService;
             this.paymentProcessingService = paymentProcessingService;
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
+            this.statisticProcessingService = statisticProcessingService;
         }
 
         public IActionResult PostGroup()
@@ -97,6 +101,8 @@ namespace SmartManager.Controllers
             var deletedGroup = await this.groupProcessingService.RemoveGroupAsync(group.Id);
 
             await this.groupsStatisticProccessingService.UpdateOtherGroupsStatistics();
+
+            await this.statisticProcessingService.AddOrUpdateStatisticAsync();
 
             return RedirectToAction("GetGroups");
         }
