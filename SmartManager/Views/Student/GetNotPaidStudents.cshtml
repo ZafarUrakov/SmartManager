@@ -3,115 +3,229 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-T3+41DSEZ8OHAA2OBLRnYYpISdADlUDT2I1nMrfIIj99brEWfF+e18H3IdV92b/V" crossorigin="anonymous" />
 </head>
 <body>
     @using SmartManager.Models.Students;
     @model IQueryable<Student>
 
     @{
-        ViewData["Title"] = "GetStudentWithPayment";
+        ViewData["Title"] = "ShowStudents";
     }
     <style>
-        .btn-md-custom {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
+        .btn-warning.btn-md-custom {
+            background-color: #d9534f;
+            color: white;
+            display: flex;
+            position: absolute;
+            right: 90px;
+            top: 34px;
         }
 
-        .btn-payment,
-        .btn-remainder {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
+            .btn-warning.btn-md-custom:hover {
+                background-color: #c9302c;
+            }
+
+        .btn-black {
+            background-color: #009879;
+            color: white;
+            display: flex;
+            position: absolute;
+            right: 225px;
+            top: 34px;
         }
 
-        .btn-payment {
-            background-color: #28a745; /* Зеленый цвет для кнопки "Paid" */
+        .btn {
+            background-color: #8FBC8F;
+            color: white;
+        }
+
+        #searchInput {
+            position: relative;
+            top: -14px;
+            left: 0px;
+            font-size: 15px;
+            width: 500px;
+            background: #fff;
+        }
+
+        #searchInput {
+            margin-bottom: -60px;
+        }
+
+        .custom-file-control.btn-md-custom {
+            background-color: #007BFF;
+            color: white;
+        }
+
+
+        .btn-edit {
+            background-color: #009879;
             color: #fff;
+            font-size: 16px;
         }
 
-        .btn-remainder {
-            background-color: #ffc107; /* Желтый цвет для кнопки "Remind" */
-            color: #000;
+        .btn-delete {
+            background-color: #d9534f;
+            color: #fff;
+            font-size: 16px;
         }
 
-        /* Уменьшаем размер окна ввода суммы */
-        .small-input {
-            width: 70px;
+        .btn-md-custom {
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
         }
-    </style>
 
-    <div class="container p-3">
-        <div class="row pt-4">
-            <div class="col-6">
-                <h2 class="text-dark">Student </h2>
-            </div>
-            <div class="col-6 text-end">
-                <a asp-controller="Student" asp-action="" class="btn btn-primary btn-md-custom">
-                    <i class="bi bi-plus-circle"></i> &nbsp; Add New Student
-                </a>
-            </div>
-        </div>
-        <br />
+        .btn-edit,
+        .btn-delete {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
 
-        <div class="row pt-3">
-            <div class="col-3">
-                <input type="text" id="searchInput" class="form-control" placeholder="Search">
-            </div>
-        </div>
-        <br />
+        .custom-file-input {
+            display: none;
+        }
 
-        <div class="row">
-            <div class="col-12">
-                <p>Total Students: @Model.Count()</p>
-            </div>
-        </div>
+        .custom-file-label {
+            cursor: pointer;
+        }
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">GivenName</th>
-                    <th scope="col">Surname</th>
-                    <th scope="col">PhoneNumber</th>
-                    <th scope="col">GroupName</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int i = 1;
-                    foreach (var item in Model)
-                    {
-                        <tr class="searchable-row">
-                            <th scope="row">@i</th>
-                            <td>@item.GivenName</td>
-                            <td>@item.Surname</td>
-                            <td>@item.PhoneNumber</td>
-                            <td>@item.GroupName</td>
-                            <td>
-                                <!-- Обертываем input и кнопку в div с классом d-flex для стилизации -->
-                                <div class="d-flex align-items-center">
-                                    <!-- Уменьшаем размер окна ввода суммы и стилизуем его -->
-                                    <input type="number" id="paymentAmount_@item.Id" class="form-control form-control-sm me-2 small-input" placeholder="Amount">
-                                    <button class="btn btn-primary btn-md-custom btn-payment toggle-payment" data-student-id="@item.Id" data-is-paid="true">
-                                        <i class="bi bi-check-circle"></i> Paid
-                                    </button>
-                                </div>
-                            </td>
-                            <td>
-                                <button class="btn btn-primary btn-md-custom btn-remainder toggle-remainder" data-student-id="@item.Id" data-remainder="true">
-                                    <i class="bi bi-alarm"></i> Remind
-                                </button>
-                            </td>
-                        </tr>
-                        i++;
-                    }
+        .custom-file-control {
+            display: flex;
+            align-items: end;
+        }
+
+        * {
+            font-family: sans-serif;
+        }
+
+        .table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            min-width: 400px;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+            .table thead tr {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+                font-weight: bold;
+            }
+
+            .table th,
+            .table td {
+                padding: 12px 15px;
+            }
+
+            .table tbody tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+                .table tbody tr:nth-of-type(even) {
+                    background-color: #f3f3f3;
                 }
-            </tbody>
-        </table>
+
+                .table tbody tr:last-of-type {
+                    border-bottom: 2px solid #009879;
+                }
+
+                .table tbody tr.active-row {
+                    font-weight: bold;
+                    color: #009879;
+                }
+
+        .student-count {
+            position: absolute;
+            top: 5px;
+            left: 0px;
+            color: #333;
+            font-size: 15px;
+        }
+
+    </style>
+    <div style="position: relative;">
+        <div class="student-count">
+            Total Students: @Model.Count()
+        </div>
     </div>
+
+    <div style="position: relative;">
+        <form id="" method="" asp-action="" enctype="multipart/form-data" class="d-inline-block">
+        </form>
+    </div>
+    <br />
+    <div class="col-5">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search">
+    </div>
+    <br />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Given name</th>
+                <th scope="col">Sur name</th>
+                <th scope="col">Phone number</th>
+                <th scope="col">Group </th>
+                <th scope="col"> </th>
+                <th scope="col"></th>
+                <th scope="col">Accept payment</th>
+                <th scope="col">Remind</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1;
+                foreach (var item in Model)
+                {
+                    <tr class="searchable-row">
+                        <th scope="row">@i</th>
+                        <td>@item.GivenName</td>
+                        <td>@item.Surname</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.GroupName</td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <input type="number" id="paymentAmount_@item.Id" class="form-control form-control-sm me-2 small-input" placeholder="Amount">
+                                <button class="btn btn-primary btn-md-custom btn-payment toggle-payment" data-student-id="@item.Id" data-is-paid="true">
+                                    <i class="bi bi-check-circle"></i> Paid
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-md-custom btn-remainder toggle-remainder" data-student-id="@item.Id" data-remainder="true">
+                                <i class="bi bi-alarm"></i> Remind
+                            </button>
+                        </td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function submitForm() {
+            document.getElementById("form").submit();
+        }
+
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".searchable-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
     <script>
         $(document).ready(function () {
             $("#searchInput").on("keyup", function () {
