@@ -56,7 +56,7 @@ namespace SmartManager.Controllers
 
             await this.telegramBotProcessingService.SendPaymentMessageToStudents(student, isPaid);
 
-            return RedirectToAction("GetPayment", "Student");
+            return RedirectToAction("GetNotPaidStudents", "Student");
         }
 
 
@@ -66,7 +66,7 @@ namespace SmartManager.Controllers
         {
             await this.telegramBotProcessingService.SendReminderMessageToStudents(studentId, remainder);
 
-            return RedirectToAction("GetPayment", "Student");
+            return RedirectToAction("GetNotPaidStudents", "Student");
         }
     }
 }

@@ -75,7 +75,12 @@ namespace SmartManager.Services.Processings.TelegramBots
 
             var telegramInformation = this.telegramInformationProcessingService
                 .RetrieveAllTelegramInformations().FirstOrDefault(t => t.StudentId == student.Id);
-            if (IsPresent is true)
+
+            if (telegramInformation == null)
+            {
+                return;
+            }
+            else if (IsPresent is true)
             {
                 await this.telegramBotService.SendTextMessageAsync(
                        telegramInformation.TelegramId,
