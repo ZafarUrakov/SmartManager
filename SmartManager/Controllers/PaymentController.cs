@@ -36,17 +36,19 @@ namespace SmartManager.Controllers
         [HttpPost]
         public async ValueTask<ActionResult> UpdatePaymentAsync(Guid studentId, bool isPaid = true, decimal amount = 0)
         {
+            var student = await this.studentProcessingService.RetrieveStudentByIdAsync(studentId);
+
             var persistedPayment =
                 this.paymentProcessingService.RetrieveAllPayments()
                     .FirstOrDefault(s => s.StudentId == studentId);
 
             persistedPayment.IsPaid = isPaid;
             persistedPayment.StudentId = studentId;
+            persistedPayment.Student = student;
             persistedPayment.Date = DateTime.Now;
 
             persistedPayment.Amount = amount > 0 ? amount : 900000;
 
-            var student = await this.studentProcessingService.RetrieveStudentByIdAsync(studentId);
 
             await this.paymentProcessingService.ModifyPaymentAsync(persistedPayment);
 
