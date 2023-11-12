@@ -1,47 +1,154 @@
-﻿@using SmartManager.Models.Students;
-@model IQueryable<Student>
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
+    @using SmartManager.Models.Students;
+    @model IQueryable<Student>
 
     @{
-        ViewData["Title"] = "GetStudentWithAttendance";
+        ViewData["Title"] = "ShowStudents";
     }
     <style>
+        .btn-yellow {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #009879;
+            color: white;
+        }
+
+        .btn-group {
+            background-color: #8FBC8F;
+            color: white;
+        }
+
+        #searchInput {
+            position: relative;
+            top: -14px;
+            left: 0px;
+            font-size: 15px;
+            width: 500px;
+            background: #fff;
+        }
+
+        #searchInput {
+            margin-bottom: -60px;
+        }
+
+        .custom-file-control.btn-md-custom {
+            background-color: #007BFF;
+            color: white;
+        }
+
+
+        .btn-edit {
+            background-color: #009879;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .btn-delete {
+            background-color: #d9534f;
+            color: #fff;
+            font-size: 16px;
+        }
+
         .btn-md-custom {
             padding: 0.375rem 0.75rem;
             font-size: 1rem;
         }
 
-        .btn-attendance,
-        .btn-attendance {
+        .btn-edit,
+        .btn-delete {
             padding: 0.25rem 0.5rem;
             font-size: 0.875rem;
         }
+
+        .custom-file-input {
+            display: none;
+        }
+
+        .custom-file-label {
+            cursor: pointer;
+        }
+
+        .custom-file-control {
+            display: flex;
+            align-items: end;
+        }
+
+        * {
+            font-family: sans-serif;
+        }
+
+        .table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            min-width: 400px;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+            .table thead tr {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+                font-weight: bold;
+            }
+
+            .table th,
+            .table td {
+                padding: 12px 15px;
+            }
+
+            .table tbody tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+                .table tbody tr:nth-of-type(even) {
+                    background-color: #f3f3f3;
+                }
+
+                .table tbody tr:last-of-type {
+                    border-bottom: 2px solid #009879;
+                }
+
+                .table tbody tr.active-row {
+                    font-weight: bold;
+                    color: #009879;
+                }
+
+        .student-count {
+            position: absolute;
+            top: 5px;
+            left: 0px;
+            color: #333;
+            font-size: 15px;
+        }
+
     </style>
-
-    <div class="container p-3">
-        <div class="row pt-4">
-            <div class="col-6">
-                <h2 class="text-dark">Student </h2>
-            </div>
+    <div style="position: relative;">
+        <div class="student-count">
+            Total Students: @Model.Count()
         </div>
-        <br />
+    </div>
 
-        <div class="row pt-3">
-            <div class="col-3">
-                <input type="text" id="searchInput" class="form-control" placeholder="Search">
-            </div>
-        </div>
-        <br />
-
-        <div class="row">
-            <div class="col-12">
-                <p>Total Students: @Model.Count()</p>
-            </div>
-        </div>
+    <div style="position: relative;">
+        <form id="" method="" asp-action="" enctype="multipart/form-data" class="d-inline-block">
+        </form>
+    </div>
+    <br />
+    <div class="col-5">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search">
+    </div>
+    <br />
 
         <table class="table">
             <thead>
@@ -51,7 +158,9 @@
                     <th scope="col">Surname</th>
                     <th scope="col">PhoneNumber</th>
                     <th scope="col">GroupName</th>
-                    <th scope="col">Attendance</th>
+                    <th scope="col">Present</th>
+                    <th scope="col">Absent</th>
+                    <th scope="col">Review</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,13 +178,14 @@
                                 <button class="btn btn-success toggle-attendance" data-student-id="@item.Id" data-is-present="true">
                                     <i class="bi bi-check-circle"></i> Present
                                 </button>
-                                <button class="btn btn-danger toggle-attendance" data-student-id="@item.Id" data-is-present="false">
+                        </td>
+                        <td>
+                            <button class="btn btn-yellow toggle-attendance" data-student-id="@item.Id" data-is-present="false">
                                     <i class="bi bi-x-circle"></i> Absent
                                 </button>
                             </td>
                             <td>
-                                <!-- "Review" button linked to the ReviewAttendance action -->
-                                <a asp-controller="Attendance" asp-action="ReviewAttendance" asp-route-studentId="@item.Id" class="btn btn-info btn-md-custom">
+                                <a asp-controller="Attendance" asp-action="ReviewAttendance" asp-route-studentId="@item.Id" class="btn btn-group btn-md-custom">
                                     <i class="bi bi-bar-chart"></i> Review
                                 </a>
                             </td>
@@ -99,7 +209,7 @@
                         if (isPresent) {
                             button.removeClass("btn-success").addClass("btn-secondary");
                         } else {
-                            button.removeClass("btn-danger").addClass("btn-secondary");
+                            button.removeClass("btn-yellow").addClass("btn-secondary");
                         }
                     } else {
                         alert("An error occurred while updating attendance.");

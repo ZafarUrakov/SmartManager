@@ -37,9 +37,18 @@ namespace SmartManager.Controllers
 
         public IActionResult Pie()
         {
-            IQueryable<GroupsStatistic> statistics = this.groupsStatisticProccessingService.RetrieveAllGroupsStatistics();
+            IQueryable<Statistic> generalStatistics = this.statisticProcessingService.RetrieveAllStatistics();
+            IQueryable<GroupsStatistic> groupsStatistics = this.groupsStatisticProccessingService.RetrieveAllGroupsStatistics();
 
-            return View(statistics);
+            foreach(var statistic in generalStatistics)
+            {
+                var a = statistic;
+            }
+
+            var model = new Tuple<IQueryable<Statistic>, IQueryable<GroupsStatistic>>(generalStatistics, groupsStatistics);
+
+            return View(model);
         }
+
     }
 }

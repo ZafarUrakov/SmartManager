@@ -6,6 +6,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartManager.Services.Processings.Payments;
 using SmartManager.Services.Processings.PaymentStatistics;
+using SmartManager.Services.Processings.Statistics;
 using SmartManager.Services.Processings.Students;
 using SmartManager.Services.Processings.TelegramBots;
 using System;
@@ -20,18 +21,21 @@ namespace SmartManager.Controllers
         private readonly IStudentProcessingService studentProcessingService;
         private readonly IPaymentStatisticsProccessingService paymentStatisticsProccessingService;
         private readonly ITelegramBotProcessingService telegramBotProcessingService;
+        private readonly IStatisticProcessingService statisticProcessingService;
 
 
         public PaymentController(
             IPaymentProcessingService paymentProcessingService,
             IStudentProcessingService studentProcessingService,
             IPaymentStatisticsProccessingService paymentStatisticsProccessingService,
-            ITelegramBotProcessingService telegramBotProcessingService)
+            ITelegramBotProcessingService telegramBotProcessingService,
+            IStatisticProcessingService statisticProcessingService)
         {
             this.paymentProcessingService = paymentProcessingService;
             this.studentProcessingService = studentProcessingService;
             this.paymentStatisticsProccessingService = paymentStatisticsProccessingService;
             this.telegramBotProcessingService = telegramBotProcessingService;
+            this.statisticProcessingService = statisticProcessingService;
         }
         [HttpPost]
         public async ValueTask<ActionResult> UpdatePaymentAsync(Guid studentId, bool isPaid = true, decimal amount = 0)
@@ -55,6 +59,8 @@ namespace SmartManager.Controllers
             await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(student);
 
             await this.telegramBotProcessingService.SendPaymentMessageToStudents(student, isPaid);
+
+            await this.statisticProcessingService.AddOrUpdateStatisticAsync();
 
             return RedirectToAction("GetNotPaidStudents", "Student");
         }

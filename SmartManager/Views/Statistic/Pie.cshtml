@@ -1,36 +1,56 @@
-﻿@using SmartManager.Models.GroupsStatistics;
-@model IQueryable<GroupsStatistic>
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/styles.css" />
     <title></title>
+
+    <style>
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 370px -20px 220px -20px;
+        }
+
+        .chart {
+            flex: 1;
+            max-width: 40%; /* Adjust the max-width as needed */
+            margin-bottom: 20px; /* Add margin-bottom to create space between charts */
+        }
+    </style>
 </head>
+
 <body>
-    <div class="">
-        <div class="chart">
-            <canvas id="doughnut" width="300" height="300"></canvas>
+    <div style="position: relative;">
+        <div class="chart-container">
+            <div class="chart" id="doughnut">
+                <canvas id="doughnutCanvas"></canvas>
+            </div>
+            <div class="chart" id="barchart">
+                <canvas id="barchartCanvas"></canvas>
+            </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+
     <script>
-        const ctx = document.getElementById('doughnut').getContext('2d');
-        const name = [];
-        const percentage = [];
-            @foreach(var item in Model)
-            {
-                @:name.push('@item.Name');
-                @:percentage.push('@item.Percentage');
-            }
-        const doughnut = new Chart(ctx, {
+        const doughnutCtx = document.getElementById('doughnutCanvas').getContext('2d');
+        const doughnutName = [];
+        const doughnutPercentage = [];
+        @foreach (var item in Model.Item2)
+        {
+            @:doughnutName.push('@item.Name');
+            @:doughnutPercentage.push('@item.Percentage');
+        }
+                const doughnutChart = new Chart(doughnutCtx, {
             type: 'doughnut',
             data: {
-                    labels: name,
+                labels: doughnutName,
                 datasets: [{
                     label: '# Percentages',
-                        data: percentage,
+                    data: doughnutPercentage,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -51,6 +71,55 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        const barCtx = document.getElementById('barchartCanvas').getContext('2d');
+        const barScore = [];
+        @foreach (var item in Model.Item1)
+        {
+            @:barScore.push('@item.TotalStudentsCount');
+            @:barScore.push('@item.MaleStudentsCount');
+            @:barScore.push('@item.FemaleStudentsCount');
+            @:barScore.push('@item.OtherStudentsCount');
+            @:barScore.push('@item.UnknownStudentsCount');
+        }
+                const barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Total Students', 'Male', 'Female', 'Other', 'Unknown'],
+                datasets: [{
+                    label: '# Percentages',
+                    data: barScore,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true
@@ -60,4 +129,5 @@
         });
     </script>
 </body>
+
 </html>
