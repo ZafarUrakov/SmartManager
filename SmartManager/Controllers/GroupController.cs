@@ -80,8 +80,11 @@ namespace SmartManager.Controllers
         public IActionResult GetGroupsForPayments()
         {
             IQueryable<Group> groups = this.groupProcessingService.RetrieveAllGroups();
+            IQueryable<PaymentStatistic> paymentStatistics = this.paymentStatisticsProccessingService.RetrieveAllPaymentStatistics();
 
-            return View(groups);
+            var model = new Tuple<IQueryable<Group>, IQueryable<PaymentStatistic>>(groups, paymentStatistics);
+
+            return View(model);
         }
 
         [HttpGet]

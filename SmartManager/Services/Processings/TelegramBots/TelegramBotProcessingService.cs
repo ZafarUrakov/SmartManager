@@ -124,15 +124,21 @@ namespace SmartManager.Services.Processings.TelegramBots
             var telegramInformation = this.telegramInformationProcessingService
                 .RetrieveAllTelegramInformations()
                 .FirstOrDefault(t => t.StudentId == student.Id);
-
-            if (remainder is true)
+            if (telegramInformation is not null)
             {
-                await this.telegramBotService.SendTextMessageAsync(
-                    telegramInformation.TelegramId,
-                    $"🧠Smart Manager🧠\n\n{student.GivenName} {student.Surname}, " +
-                    $"a friendly reminder that your payment is due soon. " +
-                    $"Please ensure timely payment. Thank you😊! \n\nDate of notification: " +
-                    $"{date.Day}-{date.Month}-{date.Year}");
+                if (remainder is true)
+                {
+                    await this.telegramBotService.SendTextMessageAsync(
+                        telegramInformation.TelegramId,
+                        $"🧠Smart Manager🧠\n\n{student.GivenName} {student.Surname}, " +
+                        $"a friendly reminder that your payment is due soon. " +
+                        $"Please ensure timely payment. Thank you😊! \n\nDate of notification: " +
+                        $"{date.Day}-{date.Month}-{date.Year}");
+                }
+            }
+            else
+            {
+                return;
             }
         }
 
