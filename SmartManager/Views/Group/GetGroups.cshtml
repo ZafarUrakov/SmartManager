@@ -23,10 +23,14 @@
         }
 
         .btn{
-            background-color: #8FBC8F;
+            background-color: #009879;
             color: white;
         }
 
+        .btn-white {
+            background-color: #8FBC8F;
+            color: white;
+        }
         #searchInput {
             position: relative;
             top: -14px;
@@ -151,7 +155,7 @@
                         <td> 
                         </td>
                         <td>
-                            <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetStudentsWithAttendances" class="btn btn btn-sm">
+                            <a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetStudentsWithAttendances" class="btn btn-white btn-sm">
                                 <i class="bi bi-opencollective" alt="Open Collective Icon"></i> Students
                             </a>
                         </td>
