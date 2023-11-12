@@ -17,5 +17,7 @@ namespace SmartManager.Services.Processings.Statistics
         IQueryable<Statistic> RetrieveAllStatistics();
         ValueTask<Statistic> ModifyStatisticAsync(Statistic statistic);
         ValueTask<Statistic> RemoveStatisticAsync(Guid statisticid);
+        ValueTask<Statistic> ProcessAndAddStudentsStatistic();
+        void UpdateStatistic(Statistic statistic);
     }
 }

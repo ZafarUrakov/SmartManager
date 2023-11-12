@@ -44,7 +44,7 @@ namespace SmartManager.Services.Processings.Statistics
         public async ValueTask<Statistic> RemoveStatisticAsync(Guid statisticid) =>
             await this.statisticService.RemoveStatisticAsync(statisticid);
 
-        private async ValueTask<Statistic> ProcessAndAddStudentsStatistic()
+        public async ValueTask<Statistic> ProcessAndAddStudentsStatistic()
         {
             var maybeStatistic = this.statisticService
                 .RetrieveAllStatistics().FirstOrDefault();
@@ -68,7 +68,7 @@ namespace SmartManager.Services.Processings.Statistics
             }
         }
 
-        private void UpdateStatistic(Statistic statistic)
+        public void UpdateStatistic(Statistic statistic)
         {
             var students = this.studentProcessingService.RetrieveAllStudents();
             var payments = this.paymentProcessingService.RetrieveAllPayments();
