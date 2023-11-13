@@ -2,21 +2,44 @@
 @model IQueryable<Attendance>
 @{
     ViewData["Title"] = "Review Attendance";
+    var presentCount = Model.Count(a => a.IsPresent);
 }
 
 <style>
-    h2 {
+    .attendance-count {
+        margin-top: 15px;
+        font-size: 1.2em;
+    }
+    body {
+        font-family: 'Arial', sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    h2, th, td {
         color: #333;
     }
 
-    ul {
-        list-style-type: none;
-        padding: 0;
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
     }
 
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+        border-radius: 5px;
+    }
 
-    strong {
-        color: #333;
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .present, .absent {
+        font-weight: bold;
+        font-size: 1.1em;
     }
 
     .present {
@@ -26,19 +49,56 @@
     .absent {
         color: #dc3545;
     }
+
+    .table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        min-width: 400px;
+        border-radius: 5px 5px 0 0;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+
+        .table thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 15px;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+            .table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            .table tbody tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .table tbody tr.active-row {
+                font-weight: bold;
+                color: #009879;
+            }
 </style>
 
 <h2>Attendance for Student</h2>
 
-<ul>
-    @foreach (var attendance in Model)
-    {
-        <li>
-            <strong>Date:</strong> @attendance.Date.DateTime.ToShortDateString() -
-            <strong>Is Present:</strong>
-            <span class="@((attendance.IsPresent ? "present" : "absent"))">
-                @(attendance.IsPresent ? "Present" : "Absent")
-            </span>
-        </li>
-    }
-</ul>
+<table class="table">
+    <thead><tr><th>Date</th><th>Is Present</th></tr></thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr><td>@a.Date.DateTime.ToShortDateString()</td><td class="@((a.IsPresent ? "present" : "absent"))">@(a.IsPresent ? "Present" : "Absent")</td></tr>
+        }
+    </tbody>
+</table>
+
