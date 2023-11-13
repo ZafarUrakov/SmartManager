@@ -12,14 +12,7 @@
         ViewData["Title"] = "ShowStudents";
     }
     <style>
-        .btn-warning.btn-md-custom {
-            background-color: #d9534f;
-            color: white;
-            display: flex;
-            position: absolute;
-            right: 90px;
-            top: 34px;
-        }
+
 
             .btn-warning.btn-md-custom:hover {
                 background-color: #c9302c;
@@ -200,7 +193,7 @@
                             </div>
                         </td>
                         <td>
-                            <button class="btn btn-primary btn-md-custom btn-remainder toggle-remainder" data-student-id="@item.Id" data-remainder="true">
+                            <button class="btn btn-danger btn-md-custom btn-remainder toggle-remainder" data-student-id="@item.Id" data-remainder="true">
                                 <i class="bi bi-alarm"></i> Remind
                             </button>
                         </td>
