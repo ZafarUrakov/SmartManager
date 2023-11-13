@@ -5,25 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/styles.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
     <title></title>
 
     <style>
         .chart-container {
             display: flex;
             justify-content: space-between;
-            margin: 370px -20px 220px -20px;
+            margin: 330px -20px 220px -20px;
         }
 
         .chart {
             flex: 1;
-            max-width: 40%; /* Adjust the max-width as needed */
-            margin-bottom: 20px; /* Add margin-bottom to create space between charts */
+            max-width: 40%;
+            margin-bottom: 20px;
+        }
+
+        .text-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .custom-background-color {
+            background-color: #009879; /* Replace with the color you want */
+            color: black;
         }
     </style>
 </head>
 
 <body>
+
     <div style="position: relative;">
+        @{
+            var totalPayment = 0;
+            var totalPaidStudents = 0;
+            var percentage = 0;
+
+            foreach (var item in Model.Item1)
+            {
+                totalPayment += item.TotalPayment;
+                totalPaidStudents += item.PaidStudentsCount;
+                percentage += item.PaidStudentsPercentage;
+            }
+        }
+        <div class="p-3 text-primary-emphasis custom-background-color border border-primary-subtle rounded-3">
+            <div class="text-container">
+                <div>💰Total Payment: @totalPayment💲</div>
+                <div>⚠️Total Payment Percentage: @percentage%</div>
+                <div>👨🏻‍🎓Paid Students: @totalPaidStudents</div>
+            </div>
+        </div>
+
+
         <div class="chart-container">
             <div class="chart" id="doughnut">
                 <canvas id="doughnutCanvas"></canvas>
@@ -129,5 +163,4 @@
         });
     </script>
 </body>
-
 </html>
