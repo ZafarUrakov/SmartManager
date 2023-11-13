@@ -97,7 +97,7 @@ namespace SmartManager.Services.Processings.Statistics
 
             decimal paidStudentsPercentage;
             if (studentsCount != 0)
-                paidStudentsPercentage = (paidStudetnsCount / studentsCount) * 100;
+                paidStudentsPercentage = ((decimal)paidStudetnsCount / (decimal)studentsCount) * 100;
             else
                 paidStudentsPercentage = 0;
 
