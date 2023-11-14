@@ -1,1 +1,147 @@
-﻿
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>W3.CSS Template</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .mySlides {
+            display: none;
+        }
+
+        h2 {
+            font-family: "Arial", sans-serif;
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            font-family: "Arial", sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .carousel {
+            width: 70%; /* Измените значение ширины карусели по вашему желанию */
+            margin: 0 auto; /* Центрируйте карусель на странице */
+        }
+
+        .carousel-inner img {
+            width: 80%; /* Устанавливаем ширину изображений внутри карусели на 100% */
+            height: 400px; /* Задаем фиксированную высоту изображений */
+            object-fit: cover; /* Обеспечиваем сохранение пропорций и обрезаем изображение, если необходимо */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="w3-content" style="max-width:2000px;margin-top:46px">
+
+        <div class="mySlides w3-display-container w3-center">
+            <img src="~/1.png" width="1000" height="500">
+            <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+            </div>
+        </div>
+        <div class="mySlides w3-display-container w3-center">
+            <img src="~/2.png" width="1000" height="500">
+            <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+            </div>
+        </div>
+        <div class="mySlides w3-display-container w3-center">
+            <img src="~/3.png" width="1000" height="500">
+            <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
+            </div>
+        </div>
+
+        <div class="w3-container w3-content w3-center w3-padding-64" style="max-width: none;" id="band">
+            <h2 class="w3-wide">SMART MANAGER</h2>
+            <div class="w3-justify">
+                <div />
+                <p>It is an innovative application designed for efficient educational process management. Providing teachers with unique control capabilities, the application allows for remote management of students: adding, removing, creating, and editing their profiles. The statistics section enables monitoring the activity and performance of a student group.</p>
+
+                <p>Special attention is given to the convenience of tuition payment, as the application provides detailed information on the payment status for each student. The payment section ensures transparency and financial tracking convenience.</p>
+
+                <p>The Telegram bot notification system ensures prompt communication by informing students or their parents about important events, attendance, and payment status. This enhances the interaction between teachers, students, and parents, facilitating real-time and effective educational process management.</p>
+            </div>
+        </div>
+    </div>
+    <div class="w3-container w3-content w3-center w3-padding-10" style="max-width: none;" id="band">
+        <h2 class="w3-wide">HOW TO IMPORT</h2>
+    </div>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/4.png" class="d-block w-100" alt="Slide 1">
+            </div>
+            <div class="carousel-item">
+                <img src="~/5.png" class="d-block w-100" alt="Slide 2">
+            </div>
+            <div class="carousel-item">
+                <img src="~/6.png" class="d-block w-100" alt="Slide 3">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <div class="container">
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        // Automatic Slideshow - change image every 4 seconds
+        var myIndex = 0;
+        carousel();
+
+        function carousel() {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            myIndex++;
+            if (myIndex > x.length) { myIndex = 1 }
+            x[myIndex - 1].style.display = "block";
+            setTimeout(carousel, 4000);
+        }
+
+        // Used to toggle the menu on small screens when clicking on the menu button
+        function myFunction() {
+            var x = document.getElementById("navDemo");
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+            }
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        var modal = document.getElementById('ticketModal');
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
