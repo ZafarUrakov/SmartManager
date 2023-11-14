@@ -1,13 +1,68 @@
 ﻿@using SmartManager.Models.Students;
 @model Student;
 
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif; /* Updated font family */
+    }
+
+    form {
+        max-width: 800px; /* Adjust the max-width as needed */
+        margin: auto;
+    }
+
+    .border {
+        border: 1px solid #009879;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #009879; /* Background color for the form */
+    }
+
+    h2 {
+        color: #007bff;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        margin-bottom: 15px;
+    }
+
+    .btn-primary {
+        background-color: #0056b3;
+        color: #fff;
+        border-radius: 5px; /* Rounded corners for the button */
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: #fff;
+        border-radius: 5px; /* Rounded corners for the button */
+    }
+
+    .border:nth-child(odd) {
+        background-color: #f2f2f2; /* Background color for odd rows */
+    }
+
+    .border:nth-child(3),
+    .border:nth-child(5) {
+        background-color: #f2f2f2; /* Background color for the third and fifth rows */
+    }
+
+    .border:first-child {
+        background-color: #009879; /* Background color for the first row */
+        color: #fff; /* Text color for the first row */
+    }
+</style>
+
 <form method="post">
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-dark">Edit Student</h2>
+            <h2 class="text-white">New student</h2>
             <hr />
-        <input asp-for="Id" type="hidden" />
-        <input asp-for="GroupId" type="hidden" />
         </div>
         <div class="mb-3">
             <label asp-for="GivenName"></label>
@@ -26,7 +81,12 @@
         </div>
         <div class="mb-3">
             <label asp-for="Gender"></label>
-            <input asp-for="Gender" class="form-control" />
+            <select asp-for="Gender" class="form-control">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+                <option value="Unknown">Unknown</option>
+            </select>
             <span asp-validation-for="Gender" class="text-danger"></span>
         </div>
         <div class="mb-3">
@@ -34,7 +94,7 @@
             <input asp-for="GroupName" class="form-control" required />
             <span asp-validation-for="GroupName" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 150px">Edit</button>
+        <button type="submit" class="btn btn-primary" style="width: 150px">Add</button>
         <a asp-controller="Student" asp-action="GetStudents" class="btn btn-secondary" style="width: 150px">
             Back to List
         </a>

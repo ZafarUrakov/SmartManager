@@ -6,6 +6,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartManager.Models.Groups;
 using SmartManager.Models.PaymentStatistics;
+using SmartManager.Models.Students;
 using SmartManager.Services.Processings.Groups;
 using SmartManager.Services.Processings.GroupsStatistics;
 using SmartManager.Services.Processings.Payments;
@@ -79,6 +80,35 @@ namespace SmartManager.Controllers
             IQueryable<Group> groups = this.groupProcessingService.RetrieveAllGroups();
 
             return View(groups);
+        }
+
+        [HttpGet]
+        public async ValueTask<IActionResult> PutGroup(Guid groupId)
+        {
+            IQueryable<Group> groups = await Task.Run(() =>
+            {
+                return this.groupProcessingService.RetrieveAllGroups();
+            });
+
+            Group group = groups.FirstOrDefault(a => a.Id == groupId);
+
+            return View(group);
+        }
+
+        [HttpPost]
+        public async ValueTask<IActionResult> PutGroup(Group group)
+        {
+            var oldGroup = await this.studentProcessingService.RetrieveStudentByIdAsync(group.Id);
+
+            var updatedGroup = await groupProcessingService.ModifyGroupAsync(group);
+
+            this.groupsStatisticProccessingService.ModifyGroupsStatisticAsync(oldGroup);
+
+            await this.paymentStatisticsProccessingService.ModifyPaymentStatisticAsync(oldGroup);
+
+            await this.statisticProcessingService.AddOrUpdateStatisticAsync();
+
+            return RedirectToAction("GetStudents");
         }
 
         public IActionResult GetGroupsForPayments()
