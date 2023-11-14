@@ -84,19 +84,19 @@ namespace SmartManager.Services.Processings.TelegramBots
             {
                 await this.telegramBotService.SendTextMessageAsync(
                        telegramInformation.TelegramId,
-                       $"🧠Smart Manager🧠\n\n{student.GivenName} {student.Surname} is absent today! " +
+                       $"🧠Smart Manager🧠\n\n{student.GivenName} {student.Surname} is present today! " +
                        $"\n\nDate of notification: {date.Day}-{date.Month}-{date.Year}");
             }
             else
             {
                 await this.telegramBotService.SendTextMessageAsync(
                       telegramInformation.TelegramId,
-                      $"🧠Smart Manager🧠\n\n{student.GivenName} {student.Surname} is not present today! " +
+                      $"🧠Smart Manager🧠\n\n{student.GivenName} {student.Surname} is absent today! " +
                       $"\n\nDate of notification: {date.Day}-{date.Month}-{date.Year}");
             }
         }
 
-        public async ValueTask SendPaymentMessageToStudents(Student student, bool IsPaid)
+        public async ValueTask SendPaymentMessageToStudents(Student student, bool IsPaid, decimal amount)
         {
             var date = DateTimeOffset.Now;
 
@@ -110,7 +110,7 @@ namespace SmartManager.Services.Processings.TelegramBots
                     await this.telegramBotService.SendTextMessageAsync(
                            telegramInformation.TelegramId,
                            $"🧠Smart Manager🧠\n\nHello {student.GivenName} {student.Surname}, " +
-                           $"your payment has been successfully received. " +
+                           $"your payment has been successfully received.({amount} $) " +
                            $"Good study!❤️ \n\nDate of notification: {date.Day}-{date.Month}-{date.Year}");
                 }
                 else
@@ -200,7 +200,7 @@ namespace SmartManager.Services.Processings.TelegramBots
                 {
                     await this.telegramBotService.SendTextMessageWithShareContactAsync(
                         message.Chat.Id,
-                        $"🧠Welcome I am Smart Manager🧠\n\n " +
+                        $"🧠Welcome I am Smart Manager🧠\n\n" +
                         $"I am glad to welcome you, I am a smart assistant who will monitor your progress. " +
                         $"Please send your number📟 for my activation.");
                 }
