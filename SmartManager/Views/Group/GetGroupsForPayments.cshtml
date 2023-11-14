@@ -123,8 +123,8 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col"></th>
-                <th scope="col">Paids</th>
-                <th scope="col">Not paids</th>
+                <th scope="col">Paid</th>
+                <th scope="col">Not paid</th>
             </tr>
         </thead>
         <tbody>
@@ -137,20 +137,20 @@
                     <tr class="searchable-row">
                         <th scope="row">@i</th>
                         <td>@item.GroupName</td>
-                        <td style="font-weight: 600;">Paids: @Math.Round(paymentStatistic.PaidPercentage / 100, 1).ToString("P1")</td>
-                        <td style ="font-weight: 600;">Not paids: @Math.Round(paymentStatistic.NotPaidPercentage / 100, 1).ToString("P1")</td>
+                        <td style="font-weight: 600;">Paid: @Math.Round(paymentStatistic.PaidPercentage / 100, 1).ToString("P1")</td>
+                        <td style ="font-weight: 600;">Not paid: @Math.Round(paymentStatistic.NotPaidPercentage / 100, 1).ToString("P1")</td>
                         <td>
                         </td>
                         <td>
                         </td>
                         <td>
                             <a a asp-controller="Student" asp-route-groupId="@item.Id" asp-action="GetStudentsWithPayments" class="btn btn-success btn-md-custom btn-edit">
-                                <i class="bi bi-pencil"></i>Paids
+                                <i class="bi bi-pencil"></i>Paid
                             </a>
                         </td>
                         <td>
                             <a asp-controller="Student" a asp-route-groupId="@item.Id" asp-action="GetNotPaidStudents" class="btn btn-danger btn-md-custom btn-delete" onclick="return DeleteInput()">
-                                <i class="bi bi-x-lg"></i> Not paids
+                                <i class="bi bi-x-lg"></i> Not paid
                             </a>
                         </td>
                     </tr>

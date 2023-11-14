@@ -58,7 +58,7 @@ namespace SmartManager.Controllers
 
             await this.paymentStatisticsProccessingService.AddPaymentStatisticAsync(student);
 
-            await this.telegramBotProcessingService.SendPaymentMessageToStudents(student, isPaid);
+            await this.telegramBotProcessingService.SendPaymentMessageToStudents(student, isPaid, amount);
 
             await this.statisticProcessingService.AddOrUpdateStatisticAsync();
 

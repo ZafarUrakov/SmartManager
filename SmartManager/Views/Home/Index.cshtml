@@ -30,14 +30,14 @@
         }
 
         .carousel {
-            width: 70%; /* Измените значение ширины карусели по вашему желанию */
-            margin: 0 auto; /* Центрируйте карусель на странице */
+            width: 70%; 
+            margin: 0 auto;
         }
 
         .carousel-inner img {
-            width: 80%; /* Устанавливаем ширину изображений внутри карусели на 100% */
-            height: 400px; /* Задаем фиксированную высоту изображений */
-            object-fit: cover; /* Обеспечиваем сохранение пропорций и обрезаем изображение, если необходимо */
+            width: 80%;
+            height: 400px;
+            object-fit: cover; 
         }
     </style>
 </head>
@@ -108,7 +108,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
-        // Automatic Slideshow - change image every 4 seconds
         var myIndex = 0;
         carousel();
 
@@ -124,7 +123,6 @@
             setTimeout(carousel, 4000);
         }
 
-        // Used to toggle the menu on small screens when clicking on the menu button
         function myFunction() {
             var x = document.getElementById("navDemo");
             if (x.className.indexOf("w3-show") == -1) {
@@ -134,7 +132,6 @@
             }
         }
 
-        // When the user clicks anywhere outside of the modal, close it
         var modal = document.getElementById('ticketModal');
         window.onclick = function (event) {
             if (event.target == modal) {
