@@ -17,7 +17,6 @@ namespace SmartManager.Services.Processings.Attendances
         }
         public async ValueTask<Attendance> AddAttendanceAsync(Student student, bool isPresent)
         {
-
             var attendance = new Attendance
             {
                 Id = Guid.NewGuid(),
@@ -28,7 +27,6 @@ namespace SmartManager.Services.Processings.Attendances
 
             return await this.attendanceService.AddAttendanceAsync(attendance);
         }
-
         public async ValueTask<Attendance> RetrieveAttendanceByIdAsync(Guid Attendanceid) =>
             await this.attendanceService.RetrieveAttendanceByIdAsync(Attendanceid);
 
