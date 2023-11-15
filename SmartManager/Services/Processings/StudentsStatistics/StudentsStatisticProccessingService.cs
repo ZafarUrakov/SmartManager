@@ -21,20 +21,6 @@ namespace SmartManager.Services.Processings.StudentsStatistics
         {
             this.studentsStatisticService = studentsStatisticService;
         }
-        public async ValueTask<StudentsStatistic> AddStudentsStatisticAsync(StudentsStatistic StudentsStatistic) =>
-           await this.studentsStatisticService.AddStudentsStatisticAsync(StudentsStatistic);
-
-        public async ValueTask<StudentsStatistic> RetrieveStudentsStatisticByIdAsync(Guid StudentsStatisticid) =>
-            await this.studentsStatisticService.RetrieveStudentsStatisticByIdAsync(StudentsStatisticid);
-
-        public IQueryable<StudentsStatistic> RetrieveAllStudentsStatistics() =>
-            this.studentsStatisticService.RetrieveAllStudentsStatistics();
-
-        public async ValueTask<StudentsStatistic> ModifyStudentsStatisticAsync(StudentsStatistic StudentsStatistic) =>
-            await this.studentsStatisticService.ModifyStudentsStatisticAsync(StudentsStatistic);
-
-        public async ValueTask<StudentsStatistic> RemoveStudentsStatisticAsync(Guid StudentsStatisticid) =>
-            await this.studentsStatisticService.RemoveStudentsStatisticAsync(StudentsStatisticid);
 
         public async ValueTask<StudentsStatistic> UpdateStatisticsByStudentAsync(Student student)
         {
@@ -84,6 +70,21 @@ namespace SmartManager.Services.Processings.StudentsStatistics
                 await UpdateStatisticsByStudentAsync(item);
             }
         }
+
+        public async ValueTask<StudentsStatistic> AddStudentsStatisticAsync(StudentsStatistic StudentsStatistic) =>
+           await this.studentsStatisticService.AddStudentsStatisticAsync(StudentsStatistic);
+
+        public async ValueTask<StudentsStatistic> RetrieveStudentsStatisticByIdAsync(Guid StudentsStatisticid) =>
+            await this.studentsStatisticService.RetrieveStudentsStatisticByIdAsync(StudentsStatisticid);
+
+        public IQueryable<StudentsStatistic> RetrieveAllStudentsStatistics() =>
+            this.studentsStatisticService.RetrieveAllStudentsStatistics();
+
+        public async ValueTask<StudentsStatistic> ModifyStudentsStatisticAsync(StudentsStatistic StudentsStatistic) =>
+            await this.studentsStatisticService.ModifyStudentsStatisticAsync(StudentsStatistic);
+
+        public async ValueTask<StudentsStatistic> RemoveStudentsStatisticAsync(Guid StudentsStatisticid) =>
+            await this.studentsStatisticService.RemoveStudentsStatisticAsync(StudentsStatisticid);
     }
 }
 

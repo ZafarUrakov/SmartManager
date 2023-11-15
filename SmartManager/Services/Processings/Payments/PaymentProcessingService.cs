@@ -54,6 +54,14 @@ namespace SmartManager.Services.Processings.Payments
             });
         }
 
+        public async Task CheckPaymentStatisticOfList(List<Student> students)
+        {
+            foreach (var item in students)
+            {
+                await UpdatePaymentAsync(item);
+            }
+        }
+
         public async ValueTask<Payment> AddPaymentAsync(Payment Payment) =>
            await this.paymentService.AddPaymentAsync(Payment);
 
@@ -68,13 +76,5 @@ namespace SmartManager.Services.Processings.Payments
 
         public async ValueTask<Payment> RemovePaymentAsync(Guid Paymentid) =>
             await this.paymentService.RemovePaymentAsync(Paymentid);
-
-        public async Task CheckPaymentStatisticOfList(List<Student> students)
-        {
-            foreach (var item in students)
-            {
-                await UpdatePaymentAsync(item);
-            }
-        }
     }
 }

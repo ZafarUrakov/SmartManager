@@ -123,7 +123,6 @@ namespace SmartManager.Services.Processings.PaymentStatistics
             }
         }
 
-
         private static PaymentStatistic AddPaymentStatisticIfNotFound(Group group)
         {
             return new PaymentStatistic

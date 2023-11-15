@@ -40,12 +40,6 @@ namespace SmartManager.Services.Processings.Students
             return await this.studentService.AddStudentAsync(student);
         }
 
-        public async ValueTask<Student> RetrieveStudentByIdAsync(Guid studentid) =>
-            await this.studentService.RetrieveStudentByIdAsync(studentid);
-
-        public IQueryable<Student> RetrieveAllStudents() =>
-            this.studentService.RetrieveAllStudents();
-
         public async ValueTask<Student> ModifyStudentAsync(Student student)
         {
             var newGroup = await this.groupProcessingService.EnsureGroupExistsByName(student.GroupName);
@@ -54,6 +48,12 @@ namespace SmartManager.Services.Processings.Students
 
             return await this.studentService.ModifyStudentAsync(student);
         }
+
+        public async ValueTask<Student> RetrieveStudentByIdAsync(Guid studentid) =>
+            await this.studentService.RetrieveStudentByIdAsync(studentid);
+
+        public IQueryable<Student> RetrieveAllStudents() =>
+            this.studentService.RetrieveAllStudents();
 
         public async ValueTask<Student> ModifyStudentWithGroupAsync(Student student) =>
             await this.studentService.ModifyStudentAsync(student);
