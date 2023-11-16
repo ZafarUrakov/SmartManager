@@ -2,17 +2,17 @@
 @model Group
 
 @{
-    ViewData["Title"] = "PostGroup";
+    ViewData["Title"] = "PutGroup";
 }
 
 <style>
     body {
         background-color: #f8f9fa;
-        font-family: 'Roboto', sans-serif; /* Updated font family */
+        font-family: 'Roboto', sans-serif;
     }
 
     form {
-        max-width: 800px; /* Adjust the max-width as needed */
+        max-width: 800px; 
         margin: auto;
     }
 
@@ -20,7 +20,7 @@
         border: 1px solid #009879;
         border-radius: 10px;
         padding: 20px;
-        background-color: #009879; /* Background color for the form */
+        background-color: #009879; 
     }
 
     h2 {
@@ -38,35 +38,35 @@
     .btn-primary {
         background-color: #0056b3;
         color: #fff;
-        border-radius: 5px; /* Rounded corners for the button */
+        border-radius: 5px;
     }
 
     .btn-secondary {
         background-color: #6c757d;
         color: #fff;
-        border-radius: 5px; /* Rounded corners for the button */
+        border-radius: 5px; 
     }
 
     .border:nth-child(odd) {
-        background-color: #f2f2f2; /* Background color for odd rows */
+        background-color: #f2f2f2; 
     }
 
     .border:nth-child(3),
     .border:nth-child(5) {
-        background-color: #f2f2f2; /* Background color for the third and fifth rows */
+        background-color: #f2f2f2; 
     }
 
     .border:first-child {
-        background-color: #009879; /* Background color for the first row */
-        color: #fff; /* Text color for the first row */
+        background-color: #009879; 
+        color: #fff; 
     }
 </style>
 
-<form method="post" asp-action="PostGroup">
+<form method="post" asp-action="PutGroup">
     <input asp-for="Id" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-dark">Add Group</h2>
+            <h2 class="text-dark">Edit Group</h2>
             <hr />
         </div>
         <div class="mb-3">
@@ -74,7 +74,7 @@
             <input asp-for="GroupName" class="form-control" required />
             <span asp-validation-for="GroupName" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Add</button>
+        <button type="submit" class="btn btn-primary" style="width:150px">Edit</button>
         <a asp-controller="Group" asp-action="GetGroups" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>

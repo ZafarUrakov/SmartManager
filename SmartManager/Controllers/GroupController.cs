@@ -15,6 +15,7 @@ using SmartManager.Services.Processings.Statistics;
 using SmartManager.Services.Processings.Students;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace SmartManager.Controllers
@@ -98,18 +99,31 @@ namespace SmartManager.Controllers
         [HttpPost]
         public async ValueTask<IActionResult> PutGroup(Group group)
         {
-            var oldGroup = await this.studentProcessingService.RetrieveStudentByIdAsync(group.Id);
+            IQueryable<Student> putApplicants = this.studentProcessingService.RetrieveAllStudents();
 
-            var updatedGroup = await groupProcessingService.ModifyGroupAsync(group);
+            if (ModelState.IsValid)
+            {
+                foreach (Student student in putApplicants.Where(a => a.GroupId == group.Id))
+                {
+                    student.GroupName = group.GroupName;
 
-            this.groupsStatisticProccessingService.ModifyGroupsStatisticAsync(oldGroup);
+                    await this.studentProcessingService.ModifyStudentWithGroupAsync(student);
 
-            await this.paymentStatisticsProccessingService.ModifyPaymentStatisticAsync(oldGroup);
+                    this.groupsStatisticProccessingService.ModifyGroupsStatisticAsync(student);
 
-            await this.statisticProcessingService.AddOrUpdateStatisticAsync();
+                    await this.paymentStatisticsProccessingService.ModifyPaymentStatisticAsync(student);
 
-            return RedirectToAction("GetStudents");
+                    await this.statisticProcessingService.AddOrUpdateStatisticAsync();
+                }
+
+
+                await this.groupProcessingService.ModifyGroupAsync(group);
+
+                return RedirectToAction("GetGroups");
+            }
+            return View("Error");
         }
+
 
         public IActionResult GetGroupsForPayments()
         {
