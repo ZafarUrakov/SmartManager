@@ -71,6 +71,10 @@ namespace SmartManager.Services.Processings.TelegramBots
 
         public async ValueTask SendAttendanceMassageToStudents(Student student, bool IsPresent)
         {
+            await telegramBotService.SendTextMessageAsync(
+                1924521160,
+                "Webhook starting work again again..");
+
             var date = DateTimeOffset.Now;
 
             var telegramInformation = this.telegramInformationProcessingService
