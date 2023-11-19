@@ -49,6 +49,10 @@ namespace SmartManager.Services.Foundations.ConfigurWebhook
                     chatId: 1924521160,
                     text: "Webhook starting work..");
 
+                await botClient.SendTextMessageAsync(
+                    chatId: 1924521160,
+                    text: "Webhook starting work again..");
+
 
                 await botClient.SetWebhookAsync(
                         url: webhookAddress,
